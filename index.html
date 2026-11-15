@@ -747,9 +747,8 @@ section{padding:88px 0;border-top:1px solid var(--line)}
   .nav-links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:var(--panel);border-bottom:1px solid var(--line);padding:10px 20px}
   .nav-links.open{display:flex}
   .menu-btn{display:inline-flex}
-  .nav-cta .btn.outline{display:none}
 }
-@media (max-width:520px){.nav-cta{display:none}.badge{display:none}}
+@media (max-width:520px){.nav-cta .btn.solid{display:none}.badge{display:none}}
 
 /* HERO */
 .hero{padding:64px 0 0;border-top:0}
@@ -1083,7 +1082,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
     </nav>
     <button class="btn sm menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks">Menu</button>
     <div class="nav-cta">
-      <a class="btn sm outline" href="#paper" data-link="paperUrl">Download Paper (PDF)</a>
+      <a class="btn sm outline" href="#paper" data-link="paperUrl">Full Paper</a>
       <a class="btn sm solid" href="#ranker">Rank Sites</a>
     </div>
   </div>
@@ -1412,7 +1411,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
         </div>
         <p class="note" id="copyNote" role="status"></p>
         <div class="dl">
-          <a class="btn solid" href="#paper" data-link="paperUrl">Download full paper (PDF)</a>
+          <a class="btn solid" href="#paper" data-link="paperUrl">Read the full paper</a>
           <a class="btn" href="#paper" data-link="notebookUrl">Python / Earth Engine notebook</a>
           <a class="btn" href="#paper" data-link="repoUrl">Open-source repository</a>
         </div>
@@ -1450,7 +1449,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 /* ============ EDIT THESE BEFORE SUBMITTING ============ */
 const CONFIG = {
   teamName: "Terrarium",
-  paperUrl: "",      // link to your PDF
+  paperUrl: "https://docs.google.com/document/d/18SbewREDeW71RaigVlLZAUBxFVs9QnSB6Xed2i-y2ZE/edit?tab=t.79thi9rw7upp#heading=h.qoqyzi20j0ex",      // link to the paper
   notebookUrl: "",   // link to your notebook
   repoUrl: "https://github.com/lukuni/nasa_space_app",       // link to your GitHub repo
   // role: change to each person's actual role, e.g. "Remote Sensing & GIS Lead"
@@ -1957,7 +1956,7 @@ function renderPaper(){
   document.querySelectorAll("[data-link]").forEach(a => {
     const url = CONFIG[a.dataset.link];
     if (url){ a.href = url; a.target = "_blank"; a.rel = "noopener"; }
-    else a.addEventListener("click", () => { $("#linkNote").textContent = "This file will be linked here once it is published."; });
+    else a.style.display = "none";
   });
   $("#teamNameBrief").textContent = CONFIG.teamName;
   $("#crewTitle").textContent = CONFIG.teamName.startsWith("[") ? "The team" : CONFIG.teamName;
