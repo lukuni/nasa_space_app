@@ -1156,12 +1156,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
     <div class="panel wx" id="weather">
       <div class="wx-head">
         <h3>Site weather snapshot · Meteomatics</h3>
-        <p class="mono">15 Nov 2026 · 08:32 UTC (16:32 Ulaanbaatar)</p>
+        <p class="mono" id="wxTime">15 Nov 2026 · 08:32 UTC (16:32 Ulaanbaatar)</p>
       </div>
       <div class="wx-key"><span><i style="width:22px;height:6px;border-radius:3px;background:linear-gradient(90deg,#7dd3fc,#e2e8f0)"></i>24 h min → max air temp</span><span><i style="width:3px;height:12px;background:var(--earth)"></i>Now</span><span><i style="width:1px;height:12px;background:rgba(248,250,252,.5)"></i>0 °C</span></div>
       <div class="wx-rows" id="wxRows"></div>
       <div class="waxis" aria-hidden="true"><span></span><div class="ticks"><span>−30 °C</span><span>−20</span><span>−10</span><span>0</span><span>+10 °C</span></div><span></span></div>
-      <p class="wx-note">2 m air temperature and 10 m wind from the Meteomatics Weather API (Space Apps Global Offer), captured once for this submission. Air temperature is not the same as the ground-surface minima in the paper's matrix. For scale: Mars averages roughly −60 °C, and lunar polar cold traps reach about −248 °C (25 K). Even in mid-November, Tsambagarav's −29 °C overnight low is the closest of the seven to Martian air temperatures.</p>
+      <p class="wx-note">2 m air temperature and 10 m wind from the Meteomatics Weather API (Space Apps Global Offer), refreshed every 30 minutes by a scheduled GitHub Action. Air temperature is not the same as the ground-surface minima in the paper's matrix. For scale: Mars averages roughly −60 °C, and lunar polar cold traps reach about −248 °C (25 K). Even in mid-November, Tsambagarav's −29 °C overnight low is the closest of the seven to Martian air temperatures.</p>
     </div>
 
     <div class="panel rank">
@@ -1694,6 +1694,29 @@ function renderWeather(){
   });
 }
 
+function fmtWxTime(iso, live){
+  const d = new Date(iso); if (isNaN(d)) return "";
+  const ub = new Intl.DateTimeFormat("en-GB", { timeZone:"Asia/Ulaanbaatar", hour:"2-digit", minute:"2-digit" }).format(d);
+  const day = new Intl.DateTimeFormat("en-GB", { timeZone:"Asia/Ulaanbaatar", day:"numeric", month:"short", year:"numeric" }).format(d);
+  const utc = d.toISOString().slice(11,16);
+  return `${live ? "Updated " : ""}${day} · ${ub} Ulaanbaatar (${utc} UTC)${live ? " · refreshes every 30 min" : ""}`;
+}
+async function loadWeather(){
+  try {
+    const r = await fetch("weather.json?t=" + Date.now(), { cache:"no-store" });
+    if (!r.ok) return;
+    const j = await r.json();
+    let n = 0;
+    (j.sites || []).forEach(w => {
+      const s = SITES.find(x => Math.abs(x.lat - w.lat) < 0.006 && Math.abs(x.lon - w.lon) < 0.006);
+      if (s && [w.t, w.min, w.max, w.wind].every(v => typeof v === "number")){ s.wx = { t:w.t, min:w.min, max:w.max, wind:w.wind }; n++; }
+    });
+    if (!n) return;
+    $("#wxTime").textContent = fmtWxTime(j.updated, true);
+    renderWeather(); renderInspector();
+  } catch(e){ /* keep the built-in snapshot */ }
+}
+
 /* ============ SELECTION & FILTER ============ */
 function visible(s){ return state.filter === "all" || (state.filter === "moon" ? hasMoon(s) : s.mars > 0); }
 function select(id){
@@ -1896,6 +1919,7 @@ $("#cAll").textContent = SITES.length; $("#cMoon").textContent = SITES.filter(ha
 document.querySelectorAll(".fbtn").forEach(b => b.addEventListener("click", () => { state.filter = b.dataset.f; applyFilter(); }));
 select(state.sel);
 setupAudio(); setupOrbit(); setupTabs(); setupNav(); setupReveal();
+loadWeather(); setInterval(loadWeather, 10 * 60 * 1000);
 </script>
 </body>
 </html>
