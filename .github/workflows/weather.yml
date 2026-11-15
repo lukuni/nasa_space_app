@@ -1,0 +1,61 @@
+# TERRA-TWIN · refresh the Meteomatics site-weather snapshot every 30 minutes
+name: Refresh site weather
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # every 30 minutes (UTC); GitHub may start runs a few minutes late
+  workflow_dispatch:          # adds a "Run workflow" button for manual runs
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weather
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch weather for the 7 analog sites (one Meteomatics request)
+        env:
+          MM_USER: ${{ secrets.METEOMATICS_USER }}
+          MM_PASS: ${{ secrets.METEOMATICS_PASSWORD }}
+        run: |
+          set -euo pipefail
+          SITES="48.18,99.86+43.78,102.30+45.47,114.58+45.32,99.97+51.30,99.50+48.60,90.84+44.13,109.65"
+          PARAMS="t_2m:C,t_min_2m_24h:C,t_max_2m_24h:C,wind_speed_10m:ms"
+          curl -sSf --max-time 60 -u "$MM_USER:$MM_PASS" \
+            "https://api.meteomatics.com/now/${PARAMS}/${SITES}/csv" -o weather.csv
+
+      - name: Convert to weather.json
+        run: |
+          python3 - <<'PY'
+          import csv, json
+          rows = list(csv.DictReader(open("weather.csv"), delimiter=";"))
+          if not rows:
+              raise SystemExit("Empty response from Meteomatics")
+          out = {
+              "updated": rows[0]["validdate"],
+              "source": "Meteomatics Weather API",
+              "sites": [{
+                  "lat": round(float(r["lat"]), 2), "lon": round(float(r["lon"]), 2),
+                  "t": float(r["t_2m:C"]), "min": float(r["t_min_2m_24h:C"]),
+                  "max": float(r["t_max_2m_24h:C"]), "wind": float(r["wind_speed_10m:ms"]),
+              } for r in rows],
+          }
+          json.dump(out, open("weather.json", "w"), indent=2)
+          print(json.dumps(out, indent=2))
+          PY
+          rm weather.csv
+
+      - name: Commit if changed
+        run: |
+          git config user.name "terra-twin-weather-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add weather.json
+          if git diff --cached --quiet; then echo "No change"; exit 0; fi
+          git commit -m "Weather snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push
