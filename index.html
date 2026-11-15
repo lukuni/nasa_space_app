@@ -797,6 +797,67 @@ section{padding:88px 0;border-top:1px solid var(--line)}
 .mini span{color:var(--muted);font-size:.88rem}
 @media (max-width:900px){.brief{grid-template-columns:1fr}.dossier{position:static}.mini-grid{grid-template-columns:1fr}}
 
+/* SUMMARY STEPS */
+.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.step{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:16px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.step .sn{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-mono);font-weight:600;color:#031417;background:var(--moon)}
+.step b{display:block;font-family:var(--f-display);font-size:1.02rem;margin-bottom:4px}
+.step span{color:var(--muted);font-size:.9rem}
+.step strong{color:var(--text)}
+@media (max-width:700px){.steps{grid-template-columns:1fr}}
+/* FRAMEWORK */
+.params{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.param{padding:18px;display:grid;gap:8px;align-content:start;border-top:3px solid var(--moon)}
+.param:nth-child(2){border-top-color:var(--earth)}.param:nth-child(3){border-top-color:#FBBF24}.param:nth-child(4){border-top-color:var(--mars)}
+.param .pi{font-size:.8rem;color:var(--muted)}
+.param p{color:var(--muted);font-size:.9rem}
+.fw-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px;align-items:start}
+.big-eq{font-size:.95rem}
+.fw-text p+p{margin-top:12px}
+@media (max-width:900px){.params{grid-template-columns:repeat(2,1fr)}.fw-grid{grid-template-columns:1fr}}
+@media (max-width:480px){.params{grid-template-columns:1fr}}
+/* RANKER */
+.ranker{display:grid;grid-template-columns:.9fr 1.1fr;gap:16px;align-items:start}
+.rk-controls{padding:20px;display:grid;gap:22px}
+.rk-block h4,.ins-sec h4{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:10px}
+.seg,.presets{display:flex;gap:6px;flex-wrap:wrap}
+.seg .fbtn[aria-pressed="true"],.presets .fbtn[aria-pressed="true"]{background:var(--moon);color:#031417;border-color:var(--moon);font-weight:600}
+.wsliders{display:grid;gap:12px}
+.wrowS{display:grid;grid-template-columns:120px 1fr 56px;gap:10px;align-items:center;font-size:.84rem}
+.wrowS label{color:var(--muted)}
+.wrowS input{width:100%;accent-color:var(--moon)}
+.wrowS .mono{text-align:right;color:var(--text)}
+.rk-out{padding:20px;display:grid;gap:12px}
+.rk-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.rk-head .mono{font-size:.74rem;color:var(--muted)}
+.rk-list{display:grid;gap:8px}
+.rk{display:grid;grid-template-columns:28px 170px 1fr 84px;gap:10px;align-items:center;font-size:.88rem;padding:6px 6px;border-radius:8px;cursor:pointer;border:1px solid transparent}
+.rk:hover{background:rgba(255,255,255,.03);border-color:var(--line)}
+.rk .pos{font-family:var(--f-mono);font-weight:600;color:var(--earth)}
+.rk .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk .trk{position:relative;height:18px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 20%)}
+.rk .trk i{position:absolute;left:0;top:3px;bottom:3px;border-radius:0 3px 3px 0;opacity:.35}
+.rk .trk b{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0}
+.rk .v{font-family:var(--f-mono);text-align:right;font-size:.8rem;color:var(--muted)}
+.rk .v strong{color:var(--text);font-size:.95rem}
+.rk.na{opacity:.38;cursor:default}
+.rk-axis{display:grid;grid-template-columns:28px 170px 1fr 84px;gap:10px;padding:0 6px;font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+.rk-axis .ticks{display:flex;justify-content:space-between}
+.rk-legend{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+.ea{margin-top:16px;padding:20px}
+.ea-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:10px}
+.eac{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px}
+.eac b{font-family:var(--f-display);font-weight:500;font-size:.9rem}
+.eac label{display:grid;grid-template-columns:70px 1fr 40px;gap:8px;align-items:center;font-size:.78rem;color:var(--muted)}
+.eac input{width:100%;accent-color:var(--earth)}
+.eac .mono{text-align:right;color:var(--text)}
+.research{display:grid;gap:8px}
+.rs{border:1px solid rgba(16,185,129,.3);background:rgba(16,185,129,.05);border-radius:8px;padding:10px 12px}
+.rs b{display:block;font-size:.88rem;font-weight:600;color:#d1fae5}
+.rs span{font-size:.84rem;color:var(--muted)}
+@media (max-width:980px){.ranker{grid-template-columns:1fr}}
+@media (max-width:560px){.rk{grid-template-columns:22px 1fr 70px}.rk .trk{grid-column:2/4;grid-row:2}.rk-axis{display:none}}
+
 /* EXPLORER */
 .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
 .fbtn{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.04em;padding:7px 12px;border-radius:999px;border:1px solid var(--line-2);background:transparent;color:var(--muted);cursor:pointer}
@@ -1012,17 +1073,18 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
       <span class="badge">NASA SPACE APPS // 2026</span>
     </a>
     <nav class="nav-links" id="navLinks" aria-label="Sections">
-      <a href="#challenge">The Challenge</a>
-      <a href="#map">Interactive Analog Map</a>
-      <a href="#method">Methodology</a>
-      <a href="#data">NASA Datasets</a>
-      <a href="#limits">Limitations Matrix</a>
-      <a href="#paper">Paper &amp; Citation</a>
+      <a href="#summary">Summary</a>
+      <a href="#framework">AFIX Framework</a>
+      <a href="#ranker">Mission Ranker</a>
+      <a href="#map">Site Explorer</a>
+      <a href="#data">NASA Data</a>
+      <a href="#limits">Limits</a>
+      <a href="#paper">Paper</a>
     </nav>
     <button class="btn sm menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks">Menu</button>
     <div class="nav-cta">
       <a class="btn sm outline" href="#paper" data-link="paperUrl">Download Paper (PDF)</a>
-      <a class="btn sm solid" href="#map">Explore Twin Sites</a>
+      <a class="btn sm solid" href="#ranker">Rank Sites</a>
     </div>
   </div>
 </header>
@@ -1034,12 +1096,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <div class="eyebrow">Planetary science &amp; Earth observation <b>•</b> Global submission</div>
-        <h1>Finding the <em>Moon</em> and <em class="m">Mars</em> on Earth before we launch.</h1>
-        <p class="sub">TERRA-TWIN screens all of Mongolia on a 1&nbsp;km grid against lunar south-pole and Martian reference conditions, then scores the strongest candidates on four separate fidelity axes. The result is a ranked network of seven under-studied sites, from Holocene lava fields to buried glacier ice, each matched to an Artemis or Mars exploration target.</p>
+        <div class="eyebrow">TERRA-TWIN <b>•</b> Team Terrarium <b>•</b> NASA Space Apps 2026</div>
+        <h1>What can our Earth teach us about the <em>Moon</em> and <em class="m">Mars</em>?</h1>
+        <p class="sub">We used NASA and partner remote-sensing data to pick seven distinctive landscapes in Mongolia, measured how closely each resembles a lunar or Martian terrain, and show what research could be done there and why it matters.</p>
         <div class="cta">
-          <a class="btn solid" href="#map">Explore twin sites</a>
-          <a class="btn" href="#method">How we scored the country</a>
+          <a class="btn solid" href="#ranker">Rank sites for your mission</a>
+          <a class="btn" href="#framework">How AFIX works</a>
         </div>
       </div>
       <div class="orbit-box" aria-label="Schematic linking Mongolian analog sites to the lunar south pole and Jezero Crater on Mars">
@@ -1051,35 +1113,29 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
     <div class="strip">
       <div><div class="n">7</div><div class="l">Mongolian analog sites identified &amp; scored</div></div>
       <div><div class="n">14</div><div class="l">Open Earth, Moon &amp; Mars datasets fused</div></div>
-      <div><div class="n">1<small>km</small></div><div class="l">Stage-1 national screening grid</div></div>
-      <div><div class="n">4</div><div class="l">Fidelity axes: thermal, geology, soil mechanics, morphology</div></div>
+      <div><div class="n">6</div><div class="l">Mission profiles that re-weight the ranking</div></div>
+      <div><div class="n">4</div><div class="l">Similarity parameters: thermal, chemical, mechanical, terrain</div></div>
     </div>
   </div>
 </section>
 
-<!-- CHALLENGE -->
-<section id="challenge">
+<!-- SUMMARY -->
+<section id="summary">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">01 // Executive abstract</div>
-      <h2>Why the current analog map falls short</h2>
+      <div class="eyebrow">01 // Executive summary</div>
+      <h2>Seven Mongolian landscapes, tested against the Moon and Mars</h2>
     </div>
     <div class="brief">
       <aside class="panel dossier" aria-label="Mission brief">
         <div class="top"><span class="eyebrow">Flight brief</span><span class="chip earth"><span class="dot"></span>Ground truth</span></div>
         <dl>
-          <div><dt>Mission</dt><dd>TERRA-TWIN · <span id="teamNameBrief">Team</span></dd></div>
+          <div><dt>Guiding question</dt><dd>What can our Earth teach us about the Moon and Mars?</dd></div>
+          <div><dt>Team</dt><dd><span id="teamNameBrief">Terrarium</span> · Mongolia</dd></div>
+          <div><dt>Challenge</dt><dd>Identify Earth Locations that Analog the Permanent Moon Base Locations and Mars</dd></div>
           <div><dt>Study area</dt><dd class="mono">Mongolia · 41.5–52.0°N · 87.7–119.9°E</dd></div>
-          <div><dt>Target zones</dt><dd>Lunar south pole (89.9°S) &amp; mare pits · Jezero Crater · Arcadia / Utopia Planitia · Deuteronilus Mensae · Gale Crater dunes</dd></div>
-          <div><dt>Index</dt><dd class="mono">AFIX → AFIX<sub>adj</sub> (0–100)</dd></div>
-          <div><dt>Recommended campaign</dt><dd>Khangai–Gobi Transect along ~100°E</dd></div>
+          <div><dt>Twin targets</dt><dd>Lunar south pole &amp; mare pits · Jezero Crater · Arcadia / Utopia Planitia · Deuteronilus Mensae · Gale Crater dunes</dd></div>
         </dl>
-        <div class="tags">
-          <a class="chip moon" href="#map">Moon bases</a>
-          <a class="chip mars" href="#map">Mars sites</a>
-          <a class="chip" href="#method">AFIX</a>
-          <a class="chip" href="#limits">Limits</a>
-        </div>
         <div class="audio" id="audio">
           <div class="audio-row">
             <button class="play" id="playBtn" aria-label="Play 60-second audio abstract">
@@ -1091,28 +1147,83 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
         </div>
       </aside>
       <div class="narr">
-        <div>
-          <h3>The gap</h3>
-          <div class="prose">
-            <p>Most analog fieldwork returns to the same handful of places: the Atacama, Hawaiʻi, Iceland, Antarctica's Dry Valleys. Each is excellent at one or two extremes, and each was chosen largely through tradition and access. <strong>Permanent bases need more than one extreme at once:</strong> stable lava-tube roofs, cold-trapped ice, traversable dust, and long-lived buried ice, all within reach of a supported field campaign.</p>
-            <p>Central Asia is almost absent from that map. Mongolia combines extreme continental cold (paper-reported surface minima down to 215&nbsp;K), aridity, Holocene basalt, continuous permafrost, debris-covered glaciers and a confirmed impact crater inside one country with open skies and growing space ambitions.</p>
-          </div>
+        <div class="steps">
+          <div class="step"><span class="sn">1</span><div><b>Select</b><span>Using NASA and partner remote-sensing data, we chose seven distinctive regions of Mongolia: volcanic fields, dune deserts, a lava cave, alkaline lakes, permafrost, a buried glacier and an impact crater.</span></div></div>
+          <div class="step"><span class="sn">2</span><div><b>Measure similarity</b><span>For each region we defined four similarity parameters and combined them into one index, <strong>AFIX</strong>, to test whether it resembles a lunar or Martian terrain, and how closely.</span></div></div>
+          <div class="step"><span class="sn">3</span><div><b>Rank for a purpose</b><span>Different research needs different similarity. A rover test cares about soil and terrain; a habitat test cares about cold. AFIX re-weights for the goal, then adjusts for evidence and access.</span></div></div>
+          <div class="step"><span class="sn">4</span><div><b>Show what to study</b><span>For every site we show which studies could be done there and why each one matters for Moon and Mars exploration.</span></div></div>
         </div>
-        <div>
-          <h3>Our approach</h3>
-          <div class="prose">
-            <p>We replace hand-picked sites with a <strong>two-stage, open-data screening pipeline</strong>. Stage 1 grids the whole country at 1&nbsp;km and measures each cell's distance from lunar and Martian reference conditions. Stage 2 scores the surviving hotspots with the <strong>Analog Fidelity Index (AFIX)</strong>.</p>
-            <p>AFIX keeps fidelity <strong>decomposed into separate physical axes</strong> instead of one opaque "Mars-likeness" score, then discounts it honestly for how strong the evidence is and how reachable the site is.</p>
-          </div>
-          <div class="mini-grid">
-            <div class="mini"><b>S<sub>therm</sub></b><span>Thermal amplitude and extremity match</span></div>
-            <div class="mini"><b>S<sub>geol</sub></b><span>Petrologic and mineralogical affinity</span></div>
-            <div class="mini"><b>S<sub>rheo</sub></b><span>Soil mechanics and shear resistance</span></div>
-            <div class="mini"><b>S<sub>morph</sub></b><span>Geomorphological and structural similarity</span></div>
-          </div>
+        <div class="prose">
+          <p><strong>Why Mongolia?</strong> Most analog work returns to the Atacama, Hawaiʻi, Iceland and Antarctica. Mongolia combines extreme continental cold, aridity, young basalt, permafrost, buried ice and a confirmed impact crater inside one country. Most of our seven sites are well known to geologists, yet few have been characterized as planetary analogs. Exceptions we build on include published early-Mars paleolake work in the Valley of the Lakes and the planned MARS-V habitat station in the Gobi.</p>
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- FRAMEWORK -->
+<section id="framework">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">02 // Analytical framework</div>
+      <h2>AFIX: one index, four physical parameters</h2>
+      <p>To explore the Moon and Mars, the physical properties that matter most are how a surface handles heat, what it is made of, how it behaves under load, and what shape it has. AFIX scores each of these from 0 to 1.</p>
+    </div>
+    <div class="params">
+      <div class="panel param"><span class="pi mono">w₁ · S<sub>therm</sub></span><h3>Thermal similarity</h3><p>Temperature extremes, day–night swing and thermal inertia of the surface.</p></div>
+      <div class="panel param"><span class="pi mono">w₂ · S<sub>geol</sub></span><h3>Chemical similarity</h3><p>Soil and rock chemistry and mineralogy: basalt, iron oxides, carbonates, sulfates.</p></div>
+      <div class="panel param"><span class="pi mono">w₃ · S<sub>rheo</sub></span><h3>Mechanical similarity</h3><p>Soil strength, cohesion and friction: how ground behaves under wheels, drills and footings.</p></div>
+      <div class="panel param"><span class="pi mono">w₄ · S<sub>morph</sub></span><h3>Terrain similarity</h3><p>Surface geometry, slope and roughness, and landforms such as cones, pits, dunes and craters.</p></div>
+    </div>
+    <div class="fw-grid">
+      <div class="eq big-eq"><span class="c"># similarity for a chosen research goal</span><br>AFIX = 100 × ( <span class="k">w₁</span>·S<sub>therm</sub> + <span class="k">w₂</span>·S<sub>geol</sub> + <span class="k">w₃</span>·S<sub>rheo</sub> + <span class="k">w₄</span>·S<sub>morph</sub> )<br>w₁ + w₂ + w₃ + w₄ = 1<br><br><span class="c"># practicality of going there now</span><br>AFIX<sub>adj</sub> = AFIX × <span class="g">E</span> × <span class="g">A</span></div>
+      <div class="prose fw-text">
+        <p><strong>The weights are normalised and depend on the research goal.</strong> A rover-mobility test raises w₃ and w₄; a habitat test raises w₁; a biosignature study raises w₂. The same seven sites then rank differently, which is the point: there is no single "best analog".</p>
+        <p><strong>E and A are set by the researcher.</strong> E is evidence confidence (how well verified the site's data are) and A is accessibility (roads, season, permits). The researcher scores both for current conditions, AFIX<sub>adj</sub> becomes a number, and the seven sites rank from highest to lowest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RANKER -->
+<section id="ranker">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">03 // Mission ranker</div>
+      <h2>Choose a research goal and rank the seven sites</h2>
+      <p>Pick a twin world and a mission profile, or set your own weights. Then score evidence and access for today's conditions. The ranking updates instantly.</p>
+    </div>
+    <div class="ranker">
+      <div class="panel rk-controls">
+        <div class="rk-block">
+          <h4>1 · Twin world</h4>
+          <div class="seg" role="group" aria-label="Twin world">
+            <button class="fbtn" data-body="both" aria-pressed="true">Both</button>
+            <button class="fbtn" data-body="moon" aria-pressed="false">Moon</button>
+            <button class="fbtn" data-body="mars" aria-pressed="false">Mars</button>
+          </div>
+        </div>
+        <div class="rk-block">
+          <h4>2 · Research goal</h4>
+          <div class="presets" id="presets" role="group" aria-label="Research goal"></div>
+        </div>
+        <div class="rk-block">
+          <h4>3 · Weights <span class="mono" id="wSum"></span></h4>
+          <div class="wsliders" id="wSliders"></div>
+        </div>
+      </div>
+      <div class="panel rk-out">
+        <div class="rk-head"><h3 id="rkTitle">Ranking</h3><span class="mono" id="rkSub"></span></div>
+        <div class="rk-list" id="rkList"></div>
+        <div class="rk-axis" aria-hidden="true"><span></span><span></span><div class="ticks"><span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span></div><span></span></div>
+      </div>
+    </div>
+    <div class="panel ea">
+      <div class="rk-head"><h3>4 · Researcher inputs: evidence E and access A</h3><button class="btn sm" id="eaReset">Reset to paper values</button></div>
+      <p class="note" style="margin-top:0">Score each site for current conditions (0–1). Paper values: Dariganga is downgraded for limited access and unverified survey data.</p>
+      <div class="ea-grid" id="eaGrid"></div>
+    </div>
+    <p class="note">Sub-scores are calibrated so that balanced weights reproduce the paper's raw Moon (/9) and Mars (/18) scores; with "Both", balanced weights and paper E/A, the ranking matches the paper's multi-site table.</p>
   </div>
 </section>
 
@@ -1120,9 +1231,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 <section id="map">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">02 // Core feature</div>
-      <h2>Earth ↔ Moon / Mars twin explorer</h2>
-      <p>Select a site on the map or in the list. The inspector shows its planetary twin, the paper's scores, and the field tests it supports. Drag the evidence and access sliders to see how sensitive each score is.</p>
+      <div class="eyebrow">04 // Site explorer</div>
+      <h2>If we go: what each site can teach us</h2>
+      <p>Select a site on the map or in the list to see its planetary twin, its four similarity scores, and the research that could be done there, with why each study matters.</p>
     </div>
     <div class="filters" role="group" aria-label="Filter analogs">
       <button class="fbtn" data-f="all" aria-pressed="true">All analogs<span class="cnt" id="cAll"></span></button>
@@ -1172,21 +1283,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
       <p class="wx-note">2 m air temperature and 10 m wind from the Meteomatics Weather API (Space Apps Global Offer), refreshed every 30 minutes by a scheduled GitHub Action. Air temperature is not the same as the ground-surface minima in the paper's matrix. For scale: Mars averages roughly −60 °C, and lunar polar cold traps reach about −248 °C (25 K). Even in mid-November, Tsambagarav's −29 °C overnight low is the closest of the seven to Martian air temperatures.</p>
     </div>
 
-    <div class="panel rank">
-      <div class="rank-head">
-        <h3>Multi-site ranking · AFIX<sub>adj</sub></h3>
-        <p class="mono">0–100 · higher = stronger, better-evidenced, more accessible analog</p>
-      </div>
-      <div class="rchart" id="rchart"></div>
-      <div class="raxis" aria-hidden="true"><span></span><div class="ticks"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span></div><span></span></div>
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr><th>Candidate site</th><th class="num">Raw Moon (/9)</th><th class="num">Raw Mars (/18)</th><th class="num">Evidence E</th><th class="num">Access A</th><th class="num">AFIX<sub>adj</sub></th><th>Primary operational role</th></tr></thead>
-          <tbody id="rtable"></tbody>
-        </table>
-      </div>
-      <p class="note">* Dariganga's Moon score is flagged in the paper pending field survey. AFIX<sub>adj</sub> = 100 × (mean of the body-normalised raw scores, Moon /9 and Mars /18, for each body scored) × E × A.</p>
-    </div>
   </div>
 </section>
 
@@ -1194,8 +1290,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 <section id="method">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">03 // Technical pipeline</div>
-      <h2>How we scored the country</h2>
+      <div class="eyebrow">05 // Data pipeline</div>
+      <h2>How the sites were screened</h2>
       <p>A two-stage geospatial screening pipeline, designed to avoid selection bias: let the data nominate the sites, then test them hard.</p>
     </div>
     <div class="tabs" role="tablist" aria-label="Pipeline steps">
@@ -1256,7 +1352,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 <section id="data">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">04 // Open data</div>
+      <div class="eyebrow">06 // Open data</div>
       <h2>Fourteen open datasets, three worlds</h2>
       <p>Every input is open. Each card names the instrument, what it contributes to the score, its spatial resolution, and where to get it.</p>
     </div>
@@ -1268,7 +1364,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 <section id="limits">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">05 // Reality check</div>
+      <div class="eyebrow">07 // Reality check</div>
       <h2>What Earth cannot replicate, and how we compensate</h2>
       <p>No analog matches everything. A good analog says exactly where it breaks, so the hardware test can make up the difference.</p>
     </div>
@@ -1294,7 +1390,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 <section id="paper">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">06 // Conclusion</div>
+      <div class="eyebrow">08 // Conclusion</div>
       <h2>One transect, two worlds</h2>
     </div>
     <div class="concl">
@@ -1330,7 +1426,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 <section id="crew">
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow">07 // Mission crew</div>
+      <div class="eyebrow">09 // Mission crew</div>
       <h2 id="crewTitle">The team</h2>
     </div>
     <div class="crew" id="crewGrid"></div>
@@ -1367,7 +1463,7 @@ const CONFIG = {
 
 /* ============ DATA (from the TERRA-TWIN paper) ============ */
 const SITES = [
-  { id:"khorgo", wx:{t:-9.1,min:-12.9,max:-5.4,wind:1.7}, elev:[1900,2600], zoom:12, n:1, name:"Khorgo-Taryatu Volcanic Field", short:"Khorgo-Taryatu", region:"Khangai Mountains, Arkhangai",
+  { id:"khorgo", S:{moon:[0.30,0.55,0.40,0.53],mars:[0.35,0.50,0.40,0.53]}, research:[{t:"Map lava-tube caverns with LiDAR and ground-penetrating radar",why:"Lunar and Martian lava tubes are leading candidates for radiation-shielded bases; roof stability and GPS-denied navigation must be proven on Earth first."},{t:"Calibrate orbital radar roughness against ground truth",why:"Links Sentinel-1 / RADARSAT signatures to LRO Mini-RF, so we can read lunar pit-rim terrain from orbit with more confidence."},{t:"Cold-night power and thermal management trials",why:"Khangai winter nights stress batteries and heaters the way a lunar night does, at a fraction of the cost."}], wx:{t:-9.1,min:-12.9,max:-5.4,wind:1.7}, elev:[1900,2600], zoom:12, n:1, name:"Khorgo-Taryatu Volcanic Field", short:"Khorgo-Taryatu", region:"Khangai Mountains, Arkhangai",
     lat:48.18, lon:99.86, moon:4, mars:8, E:0.85, A:1.00, paper:38, note:"Highest-rated dual Moon/Mars site",
     role:"Integrated dual Moon/Mars campaign base",
     targetName:"Lunar mare pits · Tharsis volcanic plains & cave skylights",
@@ -1378,7 +1474,7 @@ const SITES = [
       "Sentinel-1 C-band and RADARSAT backscatter over blocky Holocene basalt gives roughness profiles that correlate with LRO Mini-RF data from lunar mare-pit rim deposits."
     ],
     tests:["Lava-tube LiDAR / GPR cavern mapping","GPS-denied cave navigation","Radar backscatter calibration","Cold-region power management"] },
-  { id:"gobi", wx:{t:-1.0,min:-2.2,max:3.4,wind:3.6}, elev:[1400,2800], zoom:10, n:2, name:"Dundgovi & Gobi Gurvansaikhan", short:"Dundgovi / Gobi", region:"Khongoryn Els & Yolyn Am, South Gobi",
+  { id:"gobi", S:{moon:[0.25,0.10,0.35,0.19],mars:[0.25,0.20,0.45,0.21]}, research:[{t:"Rover wheel-slip and traction trials on silt dunes",why:"The paper reports slip ratios within 4.2% of Curiosity's Gale Crater curves, so results can inform Mars rover design."},{t:"Dust-mitigation tests for suits, seals and solar panels",why:"Fine dust is one of the biggest risks for long stays on both the Moon and Mars."},{t:"Monitor shadow-preserved ice in Yolyn Am",why:"Shows how topographic shade keeps ice alive in a desert, the same principle behind lunar polar cold traps."}], wx:{t:-1.0,min:-2.2,max:3.4,wind:3.6}, elev:[1400,2800], zoom:10, n:2, name:"Dundgovi & Gobi Gurvansaikhan", short:"Dundgovi / Gobi", region:"Khongoryn Els & Yolyn Am, South Gobi",
     lat:43.78, lon:102.30, moon:2, mars:5, E:0.85, A:1.00, paper:21, note:"Martian eolian & dust mobility analog",
     role:"Eolian dune rover mobility & dust suits",
     targetName:"Martian eolian dune swaths · cold-trapped canyon ice",
@@ -1390,7 +1486,7 @@ const SITES = [
       "Yolyn Am's shaded gorge keeps winter ice into summer: a terrestrial view of topographic cold-trapping."
     ],
     tests:["Rover traction & wheel-slip trials","Regolith dust mitigation for suits & seals","Shadowed-ice monitoring"] },
-  { id:"dariganga", wx:{t:-9.2,min:-11.6,max:-5.1,wind:4.1}, elev:[1100,1800], zoom:11, n:3, name:"Dariganga Volcanic Field & Taliin Agui Cave", short:"Dariganga / Taliin Agui", region:"Sükhbaatar Province",
+  { id:"dariganga", S:{moon:[0.30,0.60,0.35,0.53],mars:[0.25,0.30,0.15,0.19]}, research:[{t:"Ground-penetrating radar survey of Taliin Agui cave ice",why:"Practises finding buried ice in caves, a key water resource for future lunar and Martian bases."},{t:"Dielectric measurements of alkaline basalts",why:"Ground truth for interpreting radar sounding of lunar mare basalts."},{t:"Structural survey of lava-tube features",why:"Needed to verify the site's Moon score, which the paper flags until a field survey is done."}], wx:{t:-9.2,min:-11.6,max:-5.1,wind:4.1}, elev:[1100,1800], zoom:11, n:3, name:"Dariganga Volcanic Field & Taliin Agui Cave", short:"Dariganga / Taliin Agui", region:"Sükhbaatar Province",
     lat:45.47, lon:114.58, moon:4, mars:4, E:0.70, A:0.70, paper:16, flag:true, note:"Downgraded: limited access, unverified survey data",
     role:"Subsurface lava-tube structure (requires survey)",
     targetName:"Lunar mare basalts · subsurface cave ice traps",
@@ -1402,7 +1498,7 @@ const SITES = [
       "Scores discounted (E 0.70, A 0.70) until a field survey verifies the data; the Moon score is flagged in the paper."
     ],
     tests:["GPR survey for cave ice","Cave-ice temperature logging","Lava-tube structural survey"] },
-  { id:"lakes", wx:{t:-4.7,min:-6.0,max:3.5,wind:3.6}, elev:[1100,1700], zoom:10, n:4, name:"Valley of the Lakes · Böön Tsagaan & Orog Nuur", short:"Valley of the Lakes", region:"Bayankhongor / Övörkhangai",
+  { id:"lakes", S:{moon:null,mars:[0.25,0.65,0.30,0.355]}, research:[{t:"Autonomous rover sampling of alkaline lake sediments",why:"Rehearses Perseverance-style sample selection in a Jezero-like carbonate lake system."},{t:"Carbonate and clay biosignature drilling",why:"Carbonates can preserve signs of past life, which is why Perseverance targets them at Jezero."},{t:"Field spectroscopy of carbonates and clays",why:"Validates how orbital spectrometers identify lake minerals on Mars."}], wx:{t:-4.7,min:-6.0,max:3.5,wind:3.6}, elev:[1100,1700], zoom:10, n:4, name:"Valley of the Lakes · Böön Tsagaan & Orog Nuur", short:"Valley of the Lakes", region:"Bayankhongor / Övörkhangai",
     lat:45.32, lon:99.97, moon:0, mars:7, E:1.00, A:1.00, paper:39, note:"Top-ranked Mars-specific analog",
     role:"Jezero carbonate hydrology & drilling",
     targetName:"Jezero Crater paleolake & carbonate sediments",
@@ -1413,7 +1509,7 @@ const SITES = [
       "With gypsum and halite undersaturated, the lakes follow Jezero Crater's hydrologic evolution more closely than Gale Crater's sulfate-dominated deposits."
     ],
     tests:["Autonomous rover sampling of lake sediments","Carbonate drilling & biosignature sampling","Field spectroscopy of carbonates & clays"] },
-  { id:"darkhad", wx:{t:-9.9,min:-18.0,max:-7.7,wind:0.7}, elev:[1500,2600], zoom:10, n:5, name:"Darkhad Depression", short:"Darkhad Depression", region:"Northern permafrost belt, Khövsgöl",
+  { id:"darkhad", S:{moon:null,mars:[0.45,0.30,0.30,0.28]}, research:[{t:"Radar prospecting of continuous permafrost",why:"Mid-latitude ground ice is a leading water source for future Mars crews."},{t:"ISRU ice-drill trials in frozen silt",why:"Tests drilling and water extraction before committing hardware to Mars."},{t:"Sampling the Arsain pingo ice core",why:"An analog for the ice-cored mounds seen on Martian plains."}], wx:{t:-9.9,min:-18.0,max:-7.7,wind:0.7}, elev:[1500,2600], zoom:10, n:5, name:"Darkhad Depression", short:"Darkhad Depression", region:"Northern permafrost belt, Khövsgöl",
     lat:51.30, lon:99.50, moon:0, mars:6, E:1.00, A:0.70, paper:23, note:"Martian subsurface ground-ice analog",
     role:"Permafrost & subsurface ice prospecting",
     targetName:"Arcadia & Utopia Planitia mid-latitude ground ice",
@@ -1424,7 +1520,7 @@ const SITES = [
       "The Arsain pingo holds a pure ice core formed by post-lacustrine freeze-back: an analog for Martian ice-cored mounds."
     ],
     tests:["Subsurface ice prospecting (GPR)","ISRU ice-drill trials","Pingo ice-core sampling"] },
-  { id:"tsamb", wx:{t:-20.7,min:-29.0,max:-18.2,wind:1.5}, elev:[2200,4200], zoom:11, n:6, name:"Tsambagarav Mountain · Mongolian Altai", short:"Tsambagarav Glacier", region:"Mongolian Altai",
+  { id:"tsamb", S:{moon:null,mars:[0.40,0.25,0.25,0.43]}, research:[{t:"Radar sounding through the debris cover",why:"Mirrors how MRO's SHARAD radar detects buried glaciers in Deuteronilus Mensae."},{t:"Sub-moraine ice coring and dating",why:"Shows how long a thin rock blanket can protect ice, constraining how Martian glaciers survive."},{t:"Debris-cover thermal monitoring",why:"Measures how much insulation a debris layer gives buried ice."}], wx:{t:-20.7,min:-29.0,max:-18.2,wind:1.5}, elev:[2200,4200], zoom:11, n:6, name:"Tsambagarav Mountain · Mongolian Altai", short:"Tsambagarav Glacier", region:"Mongolian Altai",
     lat:48.60, lon:90.84, moon:0, mars:6, E:1.00, A:0.70, paper:23, note:"Debris-covered glacier analog",
     role:"Sub-moraine ice preservation fieldwork",
     targetName:"Deuteronilus Mensae debris-covered glaciers",
@@ -1435,7 +1531,7 @@ const SITES = [
       "Thin debris covers can preserve massive ice through warm, hyper-arid periods, supporting models of debris-protected glacier ice on Mars."
     ],
     tests:["Radar sounding through debris cover","Sub-moraine ice coring","Debris-cover thermal monitoring"] },
-  { id:"tabun", wx:{t:-0.2,min:-6.1,max:4.2,wind:5.8}, elev:[900,1500], zoom:13, n:7, name:"Tabun-Khara-Obo Impact Crater", short:"Tabun-Khara-Obo", region:"SE Gobi, Dornogovi",
+  { id:"tabun", S:{moon:[0.15,0.25,0.20,0.29],mars:[0.15,0.30,0.20,0.24]}, research:[{t:"Drilling and seismic testbed in the crater fill",why:"Practises reading buried layers inside small craters, which are common on both worlds."},{t:"Gravity survey of the impact breccia",why:"Ground truth for geophysical exploration of impact structures."},{t:"Evaporite detection with field spectroscopy",why:"Gypsum and carbonates above breccia resemble Martian crater-lake deposits."}], wx:{t:-0.2,min:-6.1,max:4.2,wind:5.8}, elev:[900,1500], zoom:13, n:7, name:"Tabun-Khara-Obo Impact Crater", short:"Tabun-Khara-Obo", region:"SE Gobi, Dornogovi",
     lat:44.13, lon:109.65, moon:2, mars:4, E:1.00, A:0.70, paper:16, note:"Crater lake & geophysics analog",
     role:"Impact breccia & buried evaporite geophysics",
     targetName:"Small degraded Martian impact craters",
@@ -1544,7 +1640,7 @@ function renderList(){
     <button class="scard ${isDual(s) ? "dual" : ""}" data-id="${s.id}" aria-pressed="false">
       <span class="r"><span class="k">SITE ${String(s.n).padStart(2,"0")}</span><span>${hasMoon(s) ? '<span class="chip moon">Moon</span> ' : ""}<span class="chip mars">Mars</span></span></span>
       <span class="t">${esc(s.name)}</span>
-      <span class="r"><span class="k">${fmtLat(s.lat)} ${fmtLon(s.lon)}</span><span class="s">AFIX ${s.paper}</span></span>
+      <span class="r"><span class="k">${fmtLat(s.lat)} ${fmtLon(s.lon)}</span><span class="s">AFIX<sub>adj</sub> ${s.paper}</span></span>
     </button>`).join("");
   document.querySelectorAll(".scard").forEach(b => b.addEventListener("click", () => select(b.dataset.id)));
 }
@@ -1556,8 +1652,6 @@ function bar(label, val, max, color, txt){
 }
 function renderInspector(){
   const s = SITES.find(x => x.id === state.sel);
-  const E = state.E ?? s.E, A = state.A ?? s.A;
-  const val = afix(s, E, A);
   const tg = s.targets.map(t => `<div class="tgt"><div class="row"><span style="color:${t.b === "moon" ? "var(--moon)" : "var(--mars)"}">${t.b === "moon" ? "Moon" : "Mars"}</span> · ${esc(t.n)}<b>${esc(t.c)}<span class="src">${t.s === "paper" ? "paper" : "ref"}</span></b></div></div>`).join("");
   $("#inspector").innerHTML = `
     <div class="ins-head">
@@ -1578,39 +1672,23 @@ function renderInspector(){
         <div class="row" style="color:var(--text);font-size:.82rem">${esc(s.targetName)}</div>${tg}
       </div>
     </div>
-    <div class="ins-sec"><h4>Fidelity &amp; operational factors</h4>
+    ${["moon","mars"].filter(b => s.S[b]).map(b => `<div class="ins-sec"><h4>${b === "moon" ? "Moon" : "Mars"} similarity · AFIX ${Math.round(afixBody(s,b))}</h4><div class="bars">
+        ${bar("Thermal", s.S[b][0], 1, b === "moon" ? "var(--moon)" : "var(--mars)", s.S[b][0].toFixed(2))}
+        ${bar("Chemical", s.S[b][1], 1, b === "moon" ? "var(--moon)" : "var(--mars)", s.S[b][1].toFixed(2))}
+        ${bar("Mechanical", s.S[b][2], 1, b === "moon" ? "var(--moon)" : "var(--mars)", s.S[b][2].toFixed(2))}
+        ${bar("Terrain", s.S[b][3], 1, b === "moon" ? "var(--moon)" : "var(--mars)", s.S[b][3].toFixed(2))}
+      </div></div>`).join("")}
+    <div class="ins-sec"><h4>Practicality for your current mission settings</h4>
       <div class="bars">
-        ${bar("Moon fidelity", s.moon, 9, "var(--moon)", s.moon + "/9" + (s.flag ? "*" : ""))}
-        ${bar("Mars fidelity", s.mars, 18, "var(--mars)", s.mars + "/18")}
-        ${bar("Evidence E", E, 1, "#cbd5e1", E.toFixed(2))}
-        ${bar("Access A", A, 1, "#cbd5e1", A.toFixed(2))}
-        ${bar("AFIX<sub>adj</sub>", val, 50, "var(--earth)", val)}
+        ${bar("Evidence E", rk.EA[s.id].E, 1, "#cbd5e1", rk.EA[s.id].E.toFixed(2))}
+        ${bar("Access A", rk.EA[s.id].A, 1, "#cbd5e1", rk.EA[s.id].A.toFixed(2))}
+        ${bar("AFIX<sub>adj</sub>", adjFor(s) ?? 0, 100, "var(--earth)", adjFor(s) === null ? "n/a" : Math.round(adjFor(s)))}
       </div>
+      <p class="note" style="margin-top:8px">Change the research goal, E and A in the <a href="#ranker">Mission ranker</a>.</p>
     </div>
-    <div class="ins-sec"><h4>Sensitivity: what if the evidence or access changed?</h4>
-      <div class="sens">
-        <div style="display:grid;gap:10px">
-          <label for="sE">Evidence E <span class="mono" id="vE">${E.toFixed(2)}</span></label>
-          <input type="range" id="sE" min="0.5" max="1" step="0.05" value="${E}">
-          <label for="sA">Access A <span class="mono" id="vA">${A.toFixed(2)}</span></label>
-          <input type="range" id="sA" min="0.5" max="1" step="0.05" value="${A}">
-          <button class="btn sm" id="resetSens" style="justify-self:start">Reset to paper values</button>
-        </div>
-        <div class="big" id="bigVal">${val}<small>AFIX<sub>adj</sub></small></div>
-      </div>
-    </div>
-    <div class="ins-sec"><h4>Evidence</h4><ul class="evi">${s.evidence.map(e => `<li>${esc(e)}</li>`).join("")}</ul></div>
-    <div class="ins-sec"><h4>Recommended field tests</h4><div class="tests">${s.tests.map(t => `<span>${esc(t)}</span>`).join("")}</div></div>`;
-  const upd = id => () => {
-    state.E = parseFloat($("#sE").value); state.A = parseFloat($("#sA").value);
-    renderInspector();
-    const el = document.getElementById(id); if (el) el.focus();
-  };
-  $("#sE").addEventListener("change", upd("sE"));
-  $("#sA").addEventListener("change", upd("sA"));
-  $("#sE").addEventListener("input", () => liveSens(s));
-  $("#sA").addEventListener("input", () => liveSens(s));
-  $("#resetSens").addEventListener("click", () => { state.E = null; state.A = null; renderInspector(); });
+    <div class="ins-sec"><h4>If we go: research &amp; why it matters</h4><div class="research">${s.research.map(r => `<div class="rs"><b>${esc(r.t)}</b><span>${esc(r.why)}</span></div>`).join("")}</div></div>
+    <div class="ins-sec"><h4>Evidence from the paper</h4><ul class="evi">${s.evidence.map(e => `<li>${esc(e)}</li>`).join("")}</ul></div>`;
+
 }
 function liveSens(s){
   const E = parseFloat($("#sE").value), A = parseFloat($("#sA").value);
@@ -1725,6 +1803,71 @@ async function loadWeather(){
   } catch(e){ /* keep the built-in snapshot */ }
 }
 
+/* ============ AFIX MISSION RANKER ============ */
+const PRESETS = [
+  { id:"balanced", n:"Balanced (paper)", w:[25,25,25,25] },
+  { id:"rover",    n:"Rover & mobility test", w:[10,10,40,40] },
+  { id:"habitat",  n:"Habitat & thermal systems", w:[55,10,15,20] },
+  { id:"science",  n:"Geology & biosignatures", w:[10,60,10,20] },
+  { id:"isru",     n:"Ice & resource drilling", w:[35,30,25,10] },
+  { id:"cave",     n:"Lava-tube & cave ops", w:[20,15,20,45] }
+];
+const PNAMES = ["Thermal · w₁","Chemical · w₂","Mechanical · w₃","Terrain · w₄"];
+const rk = { body:"both", preset:"balanced", w:[25,25,25,25], EA:{} };
+SITES.forEach(s => rk.EA[s.id] = { E:s.E, A:s.A });
+const normW = () => { const t = rk.w.reduce((a,b)=>a+b,0) || 1; return rk.w.map(v => v / t); };
+function afixBody(s, body){ const v = s.S[body]; if (!v) return null; const w = normW(); return 100 * v.reduce((a,x,i)=>a + x*w[i], 0); }
+function afixFor(s){
+  if (rk.body !== "both") return afixBody(s, rk.body);
+  const parts = ["moon","mars"].map(b => afixBody(s,b)).filter(v => v !== null);
+  return parts.length ? parts.reduce((a,b)=>a+b,0) / parts.length : null;
+}
+function adjFor(s){ const a = afixFor(s); if (a === null) return null; const ea = rk.EA[s.id]; return a * ea.E * ea.A; }
+function setupRanker(){
+  $("#presets").innerHTML = PRESETS.map(p => `<button class="fbtn" data-preset="${p.id}" aria-pressed="${p.id === rk.preset}">${esc(p.n)}</button>`).join("");
+  $("#wSliders").innerHTML = PNAMES.map((n,i) => `<div class="wrowS"><label for="w${i}">${n}</label><input type="range" id="w${i}" min="0" max="100" step="5" value="${rk.w[i]}"><span class="mono" id="wv${i}"></span></div>`).join("");
+  $("#eaGrid").innerHTML = SITES.map(s => `<div class="eac"><b>${s.n}. ${esc(s.short)}</b>
+      <label for="E_${s.id}">Evidence E<input type="range" id="E_${s.id}" min="0" max="1" step="0.05" value="${rk.EA[s.id].E}"><span class="mono" id="Ev_${s.id}">${rk.EA[s.id].E.toFixed(2)}</span></label>
+      <label for="A_${s.id}">Access A<input type="range" id="A_${s.id}" min="0" max="1" step="0.05" value="${rk.EA[s.id].A}"><span class="mono" id="Av_${s.id}">${rk.EA[s.id].A.toFixed(2)}</span></label></div>`).join("");
+  document.querySelectorAll("[data-body]").forEach(b => b.addEventListener("click", () => {
+    rk.body = b.dataset.body; document.querySelectorAll("[data-body]").forEach(x => x.setAttribute("aria-pressed", x === b)); renderRanker();
+  }));
+  document.querySelectorAll("[data-preset]").forEach(b => b.addEventListener("click", () => {
+    const p = PRESETS.find(x => x.id === b.dataset.preset); rk.preset = p.id; rk.w = [...p.w];
+    rk.w.forEach((v,i) => $("#w"+i).value = v); renderRanker();
+  }));
+  rk.w.forEach((_,i) => $("#w"+i).addEventListener("input", e => { rk.w[i] = +e.target.value; rk.preset = "custom"; renderRanker(); }));
+  SITES.forEach(s => ["E","A"].forEach(k => $(`#${k}_${s.id}`).addEventListener("input", e => {
+    rk.EA[s.id][k] = +e.target.value; $(`#${k}v_${s.id}`).textContent = (+e.target.value).toFixed(2); renderRanker();
+  })));
+  $("#eaReset").addEventListener("click", () => { SITES.forEach(s => { rk.EA[s.id] = { E:s.E, A:s.A }; ["E","A"].forEach(k => { $(`#${k}_${s.id}`).value = s[k]; $(`#${k}v_${s.id}`).textContent = s[k].toFixed(2); }); }); renderRanker(); });
+  renderRanker();
+}
+function renderRanker(){
+  const w = normW();
+  w.forEach((v,i) => $("#wv"+i).textContent = Math.round(v*100) + "%");
+  $("#wSum").textContent = "normalised to Σw = 1";
+  document.querySelectorAll("[data-preset]").forEach(b => b.setAttribute("aria-pressed", b.dataset.preset === rk.preset));
+  const p = PRESETS.find(x => x.id === rk.preset);
+  const bodyName = { both:"Moon + Mars", moon:"Moon", mars:"Mars" }[rk.body];
+  $("#rkTitle").textContent = `Ranking for ${p ? p.n : "custom weights"} · ${bodyName}`;
+  $("#rkSub").textContent = "bar = AFIX_adj (faint = AFIX before E × A)";
+  const rows = SITES.map(s => ({ s, a:afixFor(s), adj:adjFor(s) }));
+  const ok = rows.filter(r => r.a !== null).sort((x,y) => y.adj - x.adj || y.a - x.a);
+  const na = rows.filter(r => r.a === null);
+  const col = s => isDual(s) && rk.body === "both" ? "linear-gradient(90deg,#00F0FF,#FF4D2A)" : (rk.body === "moon" ? "#00F0FF" : "#FF4D2A");
+  $("#rkList").innerHTML = ok.map((r,i) => `<div class="rk" data-id="${r.s.id}" role="button" tabindex="0" aria-label="Rank ${i+1}: ${esc(r.s.short)}, AFIX adjusted ${Math.round(r.adj)}">
+      <span class="pos">#${i+1}</span><span class="nm">${esc(r.s.short)}</span>
+      <span class="trk"><i style="width:${r.a}%;background:${col(r.s)}"></i><b style="width:${r.adj}%;background:${col(r.s)}"></b></span>
+      <span class="v"><strong>${Math.round(r.adj)}</strong> / ${Math.round(r.a)}</span></div>`).join("")
+    + na.map(r => `<div class="rk na"><span class="pos">–</span><span class="nm">${esc(r.s.short)}</span><span class="trk"></span><span class="v">not a ${rk.body} analog</span></div>`).join("");
+  document.querySelectorAll(".rk[data-id]").forEach(el => {
+    const go = () => { select(el.dataset.id); document.getElementById("map").scrollIntoView(); };
+    el.addEventListener("click", go); el.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+  });
+  if (state.sel) renderInspector();
+}
+
 /* ============ SELECTION & FILTER ============ */
 function visible(s){ return state.filter === "all" || (state.filter === "moon" ? hasMoon(s) : s.mars > 0); }
 function select(id){
@@ -1826,7 +1969,7 @@ function renderPaper(){
 }
 
 /* ============ AUDIO ABSTRACT ============ */
-const ABSTRACT = "TERRA-TWIN. Permanent bases on the Moon and Mars need hardware tested where several planetary extremes meet. Instead of returning to the usual analog sites, we screened all of Mongolia on a one-kilometre grid, comparing temperature, aridity, vegetation, emissivity, permafrost and radar roughness with lunar south-pole and Martian reference conditions. Seven candidate regions survived. We scored each with the Analog Fidelity Index, which keeps thermal, geological, soil-mechanics and morphological fidelity separate, then adjusts for evidence quality and access. The Khorgo-Taryatu volcanic field is the strongest dual Moon and Mars analog, with lava-tube structures and lunar-like radar roughness. The Valley of the Lakes is the strongest Mars analog, with alkaline carbonate lakes that echo Jezero Crater. We recommend a single field campaign, the Khangai–Gobi Transect along the one-hundredth meridian, linking both. Earth cannot reproduce reduced gravity, vacuum or space radiation, so every test pairs field work with chamber work.";
+const ABSTRACT = "What can our Earth teach us about the Moon and Mars? Team Terrarium used NASA and partner remote-sensing data to select seven distinctive landscapes in Mongolia: volcanic fields, dune deserts, a lava cave, alkaline lakes, permafrost, a buried glacier and an impact crater. We measure how closely each resembles a lunar or Martian terrain with AFIX, an index built from four physical parameters: thermal, chemical, mechanical and terrain similarity. Their weights change with the research goal, so a rover test and a habitat test rank the sites differently. Researchers then score evidence and access for current conditions to get a practical ranking. For every site, we show which studies could be done there and why they matter, from mapping lava tubes for future lunar bases to drilling Jezero-like carbonate lakes. Earth cannot reproduce reduced gravity, vacuum or space radiation, so every field test is paired with chamber tests.";
 function setupAudio(){
   const wave = $("#wave");
   wave.innerHTML = Array.from({length:40}, (_,i) => `<i style="height:${6 + Math.abs(Math.sin(i*1.7))*18}px;animation-delay:${(i%8)*.08}s"></i>`).join("");
@@ -1924,10 +2067,11 @@ function setupReveal(){
 }
 
 /* ============ INIT ============ */
-renderMap(); renderList(); renderRanking(); renderEnv(); renderBento(); renderPaper(); renderWeather();
+renderMap(); renderList(); renderEnv(); renderBento(); renderPaper(); renderWeather();
 setupLiveMap();
 $("#cAll").textContent = SITES.length; $("#cMoon").textContent = SITES.filter(hasMoon).length; $("#cMars").textContent = SITES.filter(s => s.mars > 0).length;
 document.querySelectorAll(".fbtn[data-f]").forEach(b => b.addEventListener("click", () => { state.filter = b.dataset.f; applyFilter(); }));
+setupRanker();
 select(state.sel);
 setupAudio(); setupOrbit(); setupTabs(); setupNav(); setupReveal();
 loadWeather(); setInterval(loadWeather, 10 * 60 * 1000);
