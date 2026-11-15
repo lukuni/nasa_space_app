@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TERRA-TWIN Mongolia</title>
+<meta name="description" content="TERRA-TWIN: a two-stage open-data screening of Mongolia for Earth analogs of permanent lunar base locations and Mars exploration sites. NASA Space Apps Challenge 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Orbital cartography meets mission control: void field, slate telemetry panels, cyan = Moon, rust = Mars, emerald = Earth ground truth */
+  --void:#06080D;
+  --panel:#0E131F;
+  --panel-2:#131a2a;
+  --text:#F8FAFC;
+  --muted:#94A3B8;
+  --moon:#00F0FF;
+  --mars:#FF4D2A;
+  --earth:#10B981;
+  --line:rgba(255,255,255,.1);
+  --line-2:rgba(255,255,255,.18);
+  --f-display:"Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r:10px;
+  --wrap:1200px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--void);color:var(--text);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+   radial-gradient(1200px 600px at 85% -10%, rgba(0,240,255,.06), transparent 60%),
+   radial-gradient(900px 500px at -10% 30%, rgba(255,77,42,.05), transparent 60%),
+   repeating-radial-gradient(circle at 70% 20%, transparent 0 46px, rgba(255,255,255,.018) 46px 47px);}
+main,header,footer{position:relative;z-index:1}
+a{color:var(--moon)}
+a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--moon);outline-offset:2px;border-radius:4px}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:clamp(1.7rem,3.2vw,2.4rem);font-weight:700}
+h3{font-size:1.2rem;font-weight:700}
+p{margin:0}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px}
+section{padding:88px 0;border-top:1px solid var(--line)}
+.eyebrow{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.eyebrow b{color:var(--earth);font-weight:600}
+.sec-head{display:grid;gap:12px;margin-bottom:40px;max-width:760px}
+.sec-head p{color:var(--muted)}
+.prose{max-width:66ch;color:var(--muted)}
+.prose p+p{margin-top:14px}
+.prose strong{color:var(--text);font-weight:600}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--muted);white-space:nowrap}
+.chip.moon{color:var(--moon);border-color:rgba(0,240,255,.4);background:rgba(0,240,255,.06)}
+.chip.mars{color:var(--mars);border-color:rgba(255,77,42,.45);background:rgba(255,77,42,.07)}
+.chip.earth{color:var(--earth);border-color:rgba(16,185,129,.45);background:rgba(16,185,129,.07)}
+.chip.warn{color:#FBBF24;border-color:rgba(251,191,36,.45);background:rgba(251,191,36,.07)}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+.btn{font-family:var(--f-display);font-weight:500;font-size:.92rem;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;border:1px solid var(--line-2);background:transparent;color:var(--text);text-decoration:none;cursor:pointer;transition:background .15s,border-color .15s,transform .15s}
+.btn:hover{border-color:var(--moon);background:rgba(0,240,255,.06)}
+.btn.solid{background:var(--moon);color:#031417;border-color:var(--moon);font-weight:700}
+.btn.solid:hover{background:#5ff6ff}
+.btn.sm{padding:6px 11px;font-size:.82rem}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:rgba(6,8,13,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);flex-shrink:0}
+.brand b{font-family:var(--f-display);font-weight:700;letter-spacing:.04em}
+.badge{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.1em;color:var(--muted);border:1px solid var(--line-2);padding:2px 6px;border-radius:4px}
+.nav-links{display:flex;gap:4px;margin:0 auto}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.84rem;padding:6px 8px;border-radius:6px;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-cta{display:flex;gap:8px;flex-shrink:0}
+.menu-btn{display:none;margin-left:auto}
+@media (max-width:1280px){
+  .nav-links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;background:var(--panel);border-bottom:1px solid var(--line);padding:10px 20px}
+  .nav-links.open{display:flex}
+  .menu-btn{display:inline-flex}
+  .nav-cta .btn.outline{display:none}
+}
+@media (max-width:520px){.nav-cta{display:none}.badge{display:none}}
+
+/* HERO */
+.hero{padding:64px 0 0;border-top:0}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(2.3rem,5.4vw,4rem);font-weight:700;margin:16px 0 18px}
+.hero h1 em{font-style:normal;color:var(--moon)}
+.hero h1 em.m{color:var(--mars)}
+.hero .sub{color:var(--muted);font-size:1.08rem;max-width:58ch}
+.hero .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.orbit-box{position:relative;aspect-ratio:1/0.86;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,rgba(14,19,31,.7),rgba(6,8,13,.4));overflow:hidden}
+.orbit-box canvas{width:100%;height:100%;display:block}
+.hud{position:absolute;font-family:var(--f-mono);font-size:.68rem;color:var(--muted);background:rgba(6,8,13,.66);border:1px solid var(--line);border-radius:6px;padding:6px 8px;line-height:1.45;backdrop-filter:blur(6px)}
+.hud b{color:var(--text);font-weight:600}
+.hud.tl{top:12px;left:12px}.hud.br{bottom:12px;right:12px;text-align:right}
+.strip{display:grid;grid-template-columns:repeat(4,1fr);margin-top:56px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.strip>div{padding:20px 18px;border-left:1px solid var(--line)}
+.strip>div:first-child{border-left:0}
+.strip .n{font-family:var(--f-mono);font-size:1.9rem;font-weight:600;color:var(--text)}
+.strip .n small{font-size:.95rem;color:var(--muted);margin-left:2px}
+.strip .l{font-size:.86rem;color:var(--muted)}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr}.strip{grid-template-columns:repeat(2,1fr)}.strip>div:nth-child(3){border-left:0}.strip>div:nth-child(n+3){border-top:1px solid var(--line)}}
+
+/* CHALLENGE */
+.brief{display:grid;grid-template-columns:340px 1fr;gap:40px;align-items:start}
+.dossier{position:sticky;top:88px;padding:20px}
+.dossier .top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed var(--line-2);padding-bottom:12px;margin-bottom:14px}
+.dossier dl{margin:0;display:grid;gap:10px}
+.dossier dt{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.dossier dd{margin:2px 0 0;font-size:.9rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.tags a{text-decoration:none}
+.audio{margin-top:18px;border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:10px;background:rgba(255,255,255,.02)}
+.audio-row{display:flex;align-items:center;gap:10px}
+.play{width:36px;height:36px;border-radius:50%;border:1px solid var(--moon);background:rgba(0,240,255,.08);color:var(--moon);cursor:pointer;display:grid;place-items:center;flex-shrink:0}
+.wave{display:flex;align-items:center;gap:2px;height:26px;flex:1}
+.wave i{display:block;width:3px;border-radius:2px;background:var(--line-2)}
+.audio.on .wave i{background:var(--moon);animation:wv 1s ease-in-out infinite}
+@keyframes wv{50%{transform:scaleY(.4)}}
+.audio small{color:var(--muted);font-size:.74rem}
+.narr{display:grid;gap:36px}
+.narr h3{margin-bottom:10px}
+.mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+.mini{padding:14px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.015)}
+.mini b{display:block;font-family:var(--f-display);font-size:.98rem;margin-bottom:4px}
+.mini span{color:var(--muted);font-size:.88rem}
+@media (max-width:900px){.brief{grid-template-columns:1fr}.dossier{position:static}.mini-grid{grid-template-columns:1fr}}
+
+/* EXPLORER */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.fbtn{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.04em;padding:7px 12px;border-radius:999px;border:1px solid var(--line-2);background:transparent;color:var(--muted);cursor:pointer}
+.fbtn[aria-pressed="true"]{color:#06080D;background:var(--text);border-color:var(--text)}
+.fbtn .cnt{opacity:.7;margin-left:4px}
+.explorer{display:grid;grid-template-columns:1.12fr .88fr;gap:16px;align-items:start}
+.mapwrap{padding:12px;position:relative}
+#mapSvg{width:100%;height:auto;display:block}
+.map-legend{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--f-mono);font-size:.7rem;color:var(--muted);padding:8px 4px 2px}
+.map-legend span{display:inline-flex;align-items:center;gap:6px}
+.pin{cursor:pointer}
+.pin .halo{transition:r .2s, opacity .2s}
+.pin:hover .halo,.pin.sel .halo{opacity:.35}
+.pin.dim{opacity:.18;pointer-events:none}
+.site-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.scard{text-align:left;padding:12px 12px 12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);cursor:pointer;display:grid;gap:6px;position:relative;font:inherit}
+.scard::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--mars)}
+.scard.dual::before{background:linear-gradient(var(--moon),var(--mars))}
+.scard:hover{border-color:var(--line-2)}
+.scard[aria-pressed="true"]{border-color:var(--moon);background:#101a28}
+.scard .t{font-family:var(--f-display);font-weight:500;font-size:.95rem;line-height:1.25}
+.scard .r{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.scard .k{font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+.scard .s{font-family:var(--f-mono);font-size:.82rem;color:var(--earth);font-weight:600}
+.scard[hidden]{display:none}
+.inspector{padding:20px;position:sticky;top:84px;display:grid;gap:18px}
+.ins-head{display:grid;gap:8px}
+.ins-head .num{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);letter-spacing:.1em}
+.ins-head h3{font-size:1.35rem}
+.ins-head .chips{display:flex;gap:6px;flex-wrap:wrap}
+.twin{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+.twin .side{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:rgba(255,255,255,.015);min-width:0}
+.twin .side h4{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:6px}
+.twin .side.e h4{color:var(--earth)}
+.twin .side.t h4{color:var(--moon)}
+.twin .row{font-size:.82rem;color:var(--muted);line-height:1.45}
+.twin .row b{display:block;color:var(--text);font-family:var(--f-mono);font-weight:400;font-size:.82rem;word-break:break-word}
+.twin .row+.row{margin-top:6px}
+.twin .arrow{display:grid;place-items:center;color:var(--muted);font-family:var(--f-mono)}
+.tgt{padding-top:6px}
+.tgt+.tgt{border-top:1px dashed var(--line);margin-top:6px}
+.src{font-family:var(--f-mono);font-size:.62rem;color:var(--muted);border:1px solid var(--line);padding:0 4px;border-radius:3px;margin-left:4px;vertical-align:1px}
+.bars{display:grid;gap:9px}
+.bar{display:grid;grid-template-columns:118px 1fr 52px;align-items:center;gap:10px;font-size:.8rem}
+.bar .lab{color:var(--muted)}
+.bar .trk{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;position:relative}
+.bar .trk i{position:absolute;inset:0 auto 0 0;border-radius:4px;transition:width .35s ease}
+.bar .v{font-family:var(--f-mono);text-align:right;color:var(--text)}
+.ins-sec h4{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:10px}
+.sens{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:12px}
+.sens label{font-size:.78rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.sens label .mono{color:var(--text)}
+.sens input[type=range]{width:100%;accent-color:var(--earth)}
+.big{font-family:var(--f-mono);font-size:2.2rem;font-weight:600;color:var(--earth);text-align:center;line-height:1}
+.big small{display:block;font-size:.62rem;color:var(--muted);letter-spacing:.1em;margin-top:6px}
+.evi{margin:0;padding-left:18px;color:var(--muted);font-size:.88rem;display:grid;gap:6px}
+.tests{display:flex;flex-wrap:wrap;gap:6px}
+.tests span{font-size:.8rem;padding:5px 9px;border:1px solid rgba(16,185,129,.35);color:#c9f5e4;border-radius:6px;background:rgba(16,185,129,.06)}
+@media (max-width:980px){.explorer{grid-template-columns:1fr}.inspector{position:static}}
+@media (max-width:520px){.site-list{grid-template-columns:1fr}.twin{grid-template-columns:1fr}.twin .arrow{transform:rotate(90deg)}.bar{grid-template-columns:96px 1fr 46px}}
+
+/* RANKING */
+.rank{margin-top:28px;padding:20px}
+.rank-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline;margin-bottom:14px}
+.rank-head p{color:var(--muted);font-size:.86rem}
+.rchart{display:grid;gap:8px}
+.rrow{display:grid;grid-template-columns:210px 1fr 40px;gap:12px;align-items:center;font-size:.86rem;cursor:pointer;border-radius:6px;padding:2px 4px}
+.rrow:hover{background:rgba(255,255,255,.03)}
+.rrow .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rrow .trk{height:16px;position:relative;background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 20%)}
+.rrow .trk i{position:absolute;left:0;top:0;bottom:0;border-radius:0 3px 3px 0}
+.rrow .v{font-family:var(--f-mono);text-align:right}
+.raxis{display:grid;grid-template-columns:210px 1fr 40px;gap:12px;font-family:var(--f-mono);font-size:.68rem;color:var(--muted);padding:0 4px}
+.raxis .ticks{display:flex;justify-content:space-between}
+.tbl-wrap{overflow-x:auto;margin-top:18px;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:.84rem;min-width:720px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;background:rgba(255,255,255,.02)}
+td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+@media (max-width:640px){.rrow,.raxis{grid-template-columns:120px 1fr 34px}}
+
+/* METHOD */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:0}
+.tab{font:inherit;background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:12px 14px;cursor:pointer;display:flex;gap:10px;align-items:baseline;text-align:left}
+.tab .i{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--moon)}
+.tab[aria-selected="true"] .i{color:var(--moon)}
+.tpanel{padding:26px 22px;display:grid;grid-template-columns:1.1fr .9fr;gap:28px;border:1px solid var(--line);border-top:0;border-radius:0 0 var(--r) var(--r);background:var(--panel)}
+.tpanel[hidden]{display:none}
+.tpanel p{color:var(--muted)}
+.tpanel p+p{margin-top:12px}
+.tpanel strong{color:var(--text);font-weight:600}
+.eq{font-family:var(--f-mono);background:#0a0f19;border:1px solid var(--line);border-radius:8px;padding:16px;font-size:.88rem;line-height:1.9;overflow-x:auto;color:#dbe4f0}
+.eq .c{color:var(--muted)}
+.eq .k{color:var(--moon)}
+.eq .r{color:var(--mars)}
+.eq .g{color:var(--earth)}
+.flow{display:grid;gap:8px;margin-top:16px}
+.flow div{font-family:var(--f-mono);font-size:.78rem;padding:8px 10px;border:1px solid var(--line);border-radius:6px;color:var(--muted)}
+.flow div b{color:var(--text);font-weight:600}
+@media (max-width:860px){.tpanel{grid-template-columns:1fr}}
+
+/* DATA BENTO */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.dcard{padding:16px;display:grid;gap:8px;align-content:start;text-decoration:none;color:var(--text);transition:border-color .15s}
+.dcard:hover{border-color:var(--line-2)}
+.dcard .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dcard h3{font-size:1rem}
+.dcard p{color:var(--muted);font-size:.84rem}
+.dcard .res{font-family:var(--f-mono);font-size:.74rem;color:var(--text)}
+.dcard .lnk{font-family:var(--f-mono);font-size:.72rem;color:var(--moon)}
+.dcard.wide{grid-column:span 2}
+.group-label{grid-column:1/-1;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:14px;display:flex;align-items:center;gap:10px}
+.group-label::after{content:"";flex:1;height:1px;background:var(--line)}
+@media (max-width:980px){.bento{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.bento{grid-template-columns:1fr}.dcard.wide{grid-column:auto}}
+
+/* LIMITS */
+.lim td:first-child{font-family:var(--f-display);font-weight:500;color:var(--text);white-space:nowrap}
+.lim td{color:var(--muted)}
+.lim .m{color:var(--moon)}.lim .r{color:var(--mars)}.lim .g{color:var(--earth)}
+
+/* PAPER */
+.concl{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.phase{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
+.phase .pn{font-family:var(--f-mono);font-size:.74rem;color:var(--earth);padding-top:3px}
+.phase b{font-family:var(--f-display);display:block;margin-bottom:2px}
+.phase span{color:var(--muted);font-size:.9rem}
+.code{position:relative}
+.code pre{margin:0;font-family:var(--f-mono);font-size:.8rem;line-height:1.7;background:#0a0f19;border:1px solid var(--line);border-radius:8px;padding:16px;overflow-x:auto;color:#dbe4f0}
+.code .btn{position:absolute;top:10px;right:10px}
+.dl{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.note{font-size:.8rem;color:var(--muted);margin-top:8px;min-height:1.2em}
+@media (max-width:900px){.concl{grid-template-columns:1fr}}
+
+/* CREW + FOOTER */
+.crew{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.mem{padding:16px;display:grid;gap:10px}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-mono);font-weight:600;border:1px solid var(--line-2);background:conic-gradient(from 200deg,rgba(0,240,255,.25),rgba(255,77,42,.25),rgba(16,185,129,.25),rgba(0,240,255,.25))}
+.mem b{font-family:var(--f-display)}
+.mem .role{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);letter-spacing:.04em}
+.mem .links{display:flex;gap:10px;font-size:.8rem}
+@media (max-width:900px){.crew{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.crew{grid-template-columns:1fr}}
+footer{border-top:1px solid var(--line);padding:32px 0 48px;color:var(--muted);font-size:.84rem}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+.reveal{transition:transform .6s ease}
+.reveal.pre{transform:translateY(10px)}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="TERRA-TWIN home">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+        <circle cx="14" cy="14" r="6" fill="none" stroke="#10B981" stroke-width="1.6"/>
+        <ellipse cx="14" cy="14" rx="12.5" ry="5" fill="none" stroke="#94A3B8" stroke-width="1" transform="rotate(-24 14 14)"/>
+        <circle cx="25" cy="9.6" r="2" fill="#00F0FF"/>
+        <circle cx="3.2" cy="18.6" r="1.6" fill="#FF4D2A"/>
+      </svg>
+      <b>TERRA-TWIN</b>
+      <span class="badge">NASA SPACE APPS // 2026</span>
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="Sections">
+      <a href="#challenge">The Challenge</a>
+      <a href="#map">Interactive Analog Map</a>
+      <a href="#method">Methodology</a>
+      <a href="#data">NASA Datasets</a>
+      <a href="#limits">Limitations Matrix</a>
+      <a href="#paper">Paper &amp; Citation</a>
+    </nav>
+    <button class="btn sm menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks">Menu</button>
+    <div class="nav-cta">
+      <a class="btn sm outline" href="#paper" data-link="paperUrl">Download Paper (PDF)</a>
+      <a class="btn sm solid" href="#map">Explore Twin Sites</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Planetary science &amp; Earth observation <b>•</b> Global submission</div>
+        <h1>Finding the <em>Moon</em> and <em class="m">Mars</em> on Earth before we launch.</h1>
+        <p class="sub">TERRA-TWIN screens all of Mongolia on a 1&nbsp;km grid against lunar south-pole and Martian reference conditions, then scores the strongest candidates on four separate fidelity axes. The result is a ranked network of seven under-studied sites, from Holocene lava fields to buried glacier ice, each matched to an Artemis or Mars exploration target.</p>
+        <div class="cta">
+          <a class="btn solid" href="#map">Explore twin sites</a>
+          <a class="btn" href="#method">How we scored the country</a>
+        </div>
+      </div>
+      <div class="orbit-box" aria-label="Schematic linking Mongolian analog sites to the lunar south pole and Jezero Crater on Mars">
+        <canvas id="orbit"></canvas>
+        <div class="hud tl"><b>LINK 01</b> Khorgo 48.18°N 99.86°E<br>→ Lunar south pole 89.9°S</div>
+        <div class="hud br"><b>LINK 02</b> Valley of the Lakes 45.32°N 99.97°E<br>→ Jezero 18.38°N 77.58°E</div>
+      </div>
+    </div>
+    <div class="strip">
+      <div><div class="n">7</div><div class="l">Mongolian analog sites identified &amp; scored</div></div>
+      <div><div class="n">14</div><div class="l">Open Earth, Moon &amp; Mars datasets fused</div></div>
+      <div><div class="n">1<small>km</small></div><div class="l">Stage-1 national screening grid</div></div>
+      <div><div class="n">4</div><div class="l">Fidelity axes: thermal, geology, soil mechanics, morphology</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CHALLENGE -->
+<section id="challenge">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">01 // Executive abstract</div>
+      <h2>Why the current analog map falls short</h2>
+    </div>
+    <div class="brief">
+      <aside class="panel dossier" aria-label="Mission brief">
+        <div class="top"><span class="eyebrow">Flight brief</span><span class="chip earth"><span class="dot"></span>Ground truth</span></div>
+        <dl>
+          <div><dt>Mission</dt><dd>TERRA-TWIN · <span id="teamNameBrief">Team</span></dd></div>
+          <div><dt>Study area</dt><dd class="mono">Mongolia · 41.5–52.0°N · 87.7–119.9°E</dd></div>
+          <div><dt>Target zones</dt><dd>Lunar south pole (89.9°S) &amp; mare pits · Jezero Crater · Arcadia / Utopia Planitia · Deuteronilus Mensae · Gale Crater dunes</dd></div>
+          <div><dt>Index</dt><dd class="mono">AFIX → AFIX<sub>adj</sub> (0–100)</dd></div>
+          <div><dt>Recommended campaign</dt><dd>Khangai–Gobi Transect along ~100°E</dd></div>
+        </dl>
+        <div class="tags">
+          <a class="chip moon" href="#map">Moon bases</a>
+          <a class="chip mars" href="#map">Mars sites</a>
+          <a class="chip" href="#method">AFIX</a>
+          <a class="chip" href="#limits">Limits</a>
+        </div>
+        <div class="audio" id="audio">
+          <div class="audio-row">
+            <button class="play" id="playBtn" aria-label="Play 60-second audio abstract">
+              <svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true" id="playIcon"><path d="M1 1l10 6-10 6z" fill="currentColor"/></svg>
+            </button>
+            <div class="wave" id="wave" aria-hidden="true"></div>
+          </div>
+          <small id="audioNote">60-second audio abstract, read aloud by your browser.</small>
+        </div>
+      </aside>
+      <div class="narr">
+        <div>
+          <h3>The gap</h3>
+          <div class="prose">
+            <p>Most analog fieldwork returns to the same handful of places: the Atacama, Hawaiʻi, Iceland, Antarctica's Dry Valleys. Each is excellent at one or two extremes, and each was chosen largely through tradition and access. <strong>Permanent bases need more than one extreme at once:</strong> stable lava-tube roofs, cold-trapped ice, traversable dust, and long-lived buried ice, all within reach of a supported field campaign.</p>
+            <p>Central Asia is almost absent from that map. Mongolia combines extreme continental cold (paper-reported surface minima down to 215&nbsp;K), aridity, Holocene basalt, continuous permafrost, debris-covered glaciers and a confirmed impact crater inside one country with open skies and growing space ambitions.</p>
+          </div>
+        </div>
+        <div>
+          <h3>Our approach</h3>
+          <div class="prose">
+            <p>We replace hand-picked sites with a <strong>two-stage, open-data screening pipeline</strong>. Stage 1 grids the whole country at 1&nbsp;km and measures each cell's distance from lunar and Martian reference conditions. Stage 2 scores the surviving hotspots with the <strong>Analog Fidelity Index (AFIX)</strong>.</p>
+            <p>AFIX keeps fidelity <strong>decomposed into separate physical axes</strong> instead of one opaque "Mars-likeness" score, then discounts it honestly for how strong the evidence is and how reachable the site is.</p>
+          </div>
+          <div class="mini-grid">
+            <div class="mini"><b>S<sub>therm</sub></b><span>Thermal amplitude and extremity match</span></div>
+            <div class="mini"><b>S<sub>geol</sub></b><span>Petrologic and mineralogical affinity</span></div>
+            <div class="mini"><b>S<sub>rheo</sub></b><span>Soil mechanics and shear resistance</span></div>
+            <div class="mini"><b>S<sub>morph</sub></b><span>Geomorphological and structural similarity</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORER -->
+<section id="map">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">02 // Core feature</div>
+      <h2>Earth ↔ Moon / Mars twin explorer</h2>
+      <p>Select a site on the map or in the list. The inspector shows its planetary twin, the paper's scores, and the field tests it supports. Drag the evidence and access sliders to see how sensitive each score is.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Filter analogs">
+      <button class="fbtn" data-f="all" aria-pressed="true">All analogs<span class="cnt" id="cAll"></span></button>
+      <button class="fbtn" data-f="moon" aria-pressed="false">Moon base analogs<span class="cnt" id="cMoon"></span></button>
+      <button class="fbtn" data-f="mars" aria-pressed="false">Mars analogs<span class="cnt" id="cMars"></span></button>
+    </div>
+    <div class="explorer">
+      <div>
+        <div class="panel mapwrap">
+          <svg id="mapSvg" viewBox="0 0 970 500" role="img" aria-label="Map of Mongolia with seven analog site pins"></svg>
+          <div class="map-legend">
+            <span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="#FF4D2A" stroke="#00F0FF" stroke-width="2"/></svg>Dual Moon + Mars</span>
+            <span><svg width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="#FF4D2A"/></svg>Mars</span>
+            <span><svg width="22" height="6" aria-hidden="true"><line x1="0" y1="3" x2="22" y2="3" stroke="#10B981" stroke-width="2" stroke-dasharray="4 3"/></svg>Khangai–Gobi Transect</span>
+          </div>
+        </div>
+        <div class="site-list" id="siteList"></div>
+      </div>
+      <aside class="panel inspector" id="inspector" aria-live="polite"></aside>
+    </div>
+
+    <div class="panel rank">
+      <div class="rank-head">
+        <h3>Multi-site ranking · AFIX<sub>adj</sub></h3>
+        <p class="mono">0–100 · higher = stronger, better-evidenced, more accessible analog</p>
+      </div>
+      <div class="rchart" id="rchart"></div>
+      <div class="raxis" aria-hidden="true"><span></span><div class="ticks"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span></div><span></span></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Candidate site</th><th class="num">Raw Moon (/9)</th><th class="num">Raw Mars (/18)</th><th class="num">Evidence E</th><th class="num">Access A</th><th class="num">AFIX<sub>adj</sub></th><th>Primary operational role</th></tr></thead>
+          <tbody id="rtable"></tbody>
+        </table>
+      </div>
+      <p class="note">* Dariganga's Moon score is flagged in the paper pending field survey. AFIX<sub>adj</sub> = 100 × (mean of the body-normalised raw scores, Moon /9 and Mars /18, for each body scored) × E × A.</p>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section id="method">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">03 // Technical pipeline</div>
+      <h2>How we scored the country</h2>
+      <p>A two-stage geospatial screening pipeline, designed to avoid selection bias: let the data nominate the sites, then test them hard.</p>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Pipeline steps">
+      <button class="tab" role="tab" id="t1" aria-controls="p1" aria-selected="true"><span class="i">01</span>National feature grid</button>
+      <button class="tab" role="tab" id="t2" aria-controls="p2" aria-selected="false" tabindex="-1"><span class="i">02</span>Normalise &amp; invert</button>
+      <button class="tab" role="tab" id="t3" aria-controls="p3" aria-selected="false" tabindex="-1"><span class="i">03</span>Off-world distance &amp; access filter</button>
+      <button class="tab" role="tab" id="t4" aria-controls="p4" aria-selected="false" tabindex="-1"><span class="i">04</span>AFIX fidelity scoring</button>
+    </div>
+    <div class="tpanel" role="tabpanel" id="p1" aria-labelledby="t1">
+      <div>
+        <p><strong>Stage 1 · Macro screening.</strong> Mongolia (41.5–52.0°N, 87.7–119.9°E) is gridded at 1&nbsp;km. Every cell gets a seven-element feature vector built from open Earth-observation archives: night-time minimum temperature, diurnal temperature range, vegetation index, annual precipitation, thermal-infrared emissivity, permafrost probability and SAR backscatter.</p>
+        <p>Screening criteria: aridity (&lt;150&nbsp;mm/yr), cold extremes, and mafic (basaltic) emissivity signatures.</p>
+      </div>
+      <div>
+        <div class="eq"><span class="c"># per-cell feature vector</span><br>x = [ T<sub>night,min</sub>, ΔT<sub>diurnal</sub>, NDVI, P, ε<sub>TIR</sub>, P<sub>permafrost</sub>, σ⁰<sub>SAR</sub> ]ᵀ</div>
+        <div class="flow">
+          <div><b>ERA5 / CHIRPS</b> → precipitation, temperature</div>
+          <div><b>ASTER GED · EMIT</b> → emissivity, mineralogy</div>
+          <div><b>MODIS LST · ESA Permafrost CCI</b> → thermal, ground ice</div>
+        </div>
+      </div>
+    </div>
+    <div class="tpanel" role="tabpanel" id="p2" aria-labelledby="t2" hidden>
+      <div>
+        <p>Each feature is converted to a <strong>z-score</strong> and clipped at the 2nd and 98th percentiles so that a few extreme pixels cannot dominate.</p>
+        <p>Features where a <strong>lower value means higher off-world fidelity</strong> are inverted, so that "bigger" always means "more Moon- or Mars-like". Vegetation index and annual precipitation are the main examples: bare, dry ground scores high.</p>
+      </div>
+      <div class="eq"><span class="c"># standardise, clip, orient</span><br>z<sub>i</sub> = clip( (x<sub>i</sub> − μ<sub>i</sub>) / σ<sub>i</sub> , p<sub>2</sub>, p<sub>98</sub> )<br>z<sub>NDVI</sub> ← −z<sub>NDVI</sub><br>z<sub>P</sub> ← −z<sub>P</sub></div>
+    </div>
+    <div class="tpanel" role="tabpanel" id="p3" aria-labelledby="t3" hidden>
+      <div>
+        <p>Each cell's normalised vector is compared with an <strong>off-world target reference vector</strong> built from NASA LRO Diviner lunar polar data and Mars SWIM ice and Jezero Crater data. Cells closest to a target form hotspot clusters (top-N percentile filter).</p>
+        <p>A <strong>feasibility filter</strong> then removes what a field team could not use: extreme terrain ruggedness, protected status and poor road logistics. Seven candidate regions survive.</p>
+      </div>
+      <div>
+        <div class="eq"><span class="c"># distance to Moon / Mars target</span><br>d<sub>k</sub> = ‖ z(x) − z(x*<sub>k</sub>) ‖ ,  k ∈ {<span class="k">Moon</span>, <span class="r">Mars</span>}<br><span class="c"># keep low-d cells, then</span><br>hotspots = top-N(−d<sub>k</sub>) ∩ access ∩ ¬protected</div>
+      </div>
+    </div>
+    <div class="tpanel" role="tabpanel" id="p4" aria-labelledby="t4" hidden>
+      <div>
+        <p><strong>Stage 2 · High-resolution fidelity.</strong> Sentinel-1/2, RADARSAT and LOLA / HiRISE target vectors feed four sub-scores. They are combined with normalised weights into AFIX.</p>
+        <p>AFIX is then adjusted by an <strong>evidence confidence factor E</strong> (how well verified the site's data are) and an <strong>operational accessibility factor A</strong>, giving AFIX<sub>adj</sub> on a 0–100 scale. A brilliant but unverified, hard-to-reach site cannot outrank a solid, reachable one.</p>
+      </div>
+      <div class="eq"><span class="c"># Analog Fidelity Index</span><br>AFIX = Σ w<sub>i</sub> · S<sub>i</sub> ,  i ∈ {therm, geol, rheo, morph} ,  Σ w<sub>i</sub> = 1<br><span class="c"># operational adjustment</span><br>AFIX<sub>adj</sub> = AFIX × <span class="g">E</span> × <span class="g">A</span></div>
+    </div>
+
+    <div style="margin-top:40px">
+      <h3 style="margin-bottom:6px">Comparative environmental matrix</h3>
+      <p class="prose" style="margin-bottom:4px">Reference conditions on the Moon and Mars beside the seven Mongolian candidates, as cross-correlated in the paper.</p>
+      <div class="tbl-wrap">
+        <table id="envTable"></table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA -->
+<section id="data">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">04 // Open data</div>
+      <h2>Fourteen open datasets, three worlds</h2>
+      <p>Every input is open. Each card names the instrument, what it contributes to the score, its spatial resolution, and where to get it.</p>
+    </div>
+    <div class="bento" id="bento"></div>
+  </div>
+</section>
+
+<!-- LIMITS -->
+<section id="limits">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">05 // Reality check</div>
+      <h2>What Earth cannot replicate, and how we compensate</h2>
+      <p>No analog matches everything. A good analog says exactly where it breaks, so the hardware test can make up the difference.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table class="lim">
+        <thead><tr><th>Condition</th><th>Moon</th><th>Mars</th><th>Mongolian analogs</th><th>Engineering compensation</th></tr></thead>
+        <tbody>
+          <tr><td>Gravity</td><td class="m">1.62 m/s² (⅙ g)</td><td class="r">3.71 m/s² (⅜ g)</td><td class="g">9.81 m/s²</td><td>Gravity-offload rigs and reduced-gravity flights for EVA; scale wheel loads in Bekker / Mohr–Coulomb mobility models to target gravity.</td></tr>
+          <tr><td>Atmospheric pressure</td><td class="m">&lt; 10⁻¹⁰ Pa (vacuum)</td><td class="r">≈ 600 Pa (~6 mbar)</td><td class="g">≈ 1,000 mbar, lower at altitude</td><td>Thermal-vacuum chamber pre-conditioning before field deployment; field sites test integration, chambers test survival.</td></tr>
+          <tr><td>Thermal extremes</td><td class="m">Down to 25 K in polar cold traps</td><td class="r">Down to ~140 K</td><td class="g">Minima 215–235 K (paper)</td><td>Use the sites for real thermal cycling and cold-start power management; certify components below ~200 K in cryogenic chambers.</td></tr>
+          <tr><td>Ionizing radiation</td><td class="m">Unshielded GCR &amp; solar events</td><td class="r">Thin-atmosphere GCR exposure</td><td class="g">Shielded by atmosphere &amp; magnetosphere</td><td>Accelerator test facilities for electronics and materials; analogs cannot validate radiation shielding.</td></tr>
+          <tr><td>Biology &amp; contamination</td><td class="m">Sterile</td><td class="r">Planetary-protection constraints</td><td class="g">Steppe vegetation, soil microbes</td><td>NDVI masking in screening; sterile drilling and sample-handling protocols during biosignature tests.</td></tr>
+          <tr><td>Regolith formation</td><td class="m">Impact-gardened, sharp, unweathered</td><td class="r">Wind- and water-altered basaltic fines</td><td class="g">Weathered soils, silt, scoria</td><td>Certified simulants for abrasion and wear tests; Mongolian substrates for traction, trafficability and drilling.</td></tr>
+          <tr><td>Illumination</td><td class="m">Sun near horizon at the south pole; long shadows</td><td class="r">Dusty, diffuse light</td><td class="g">Mid-latitude day/night cycle</td><td>Night operations with low-angle artificial lighting to rehearse polar navigation and perception.</td></tr>
+          <tr><td>Evidence &amp; access</td><td colspan="3">Paper's factors: Dariganga (E 0.70, A 0.70) is downgraded for limited access and unverified survey data; Darkhad, Tsambagarav and Tabun-Khara-Obo carry A = 0.70.</td><td>Phase-II drone photogrammetry and field sensor validation to raise E before committing hardware campaigns.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PAPER -->
+<section id="paper">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">06 // Conclusion</div>
+      <h2>One transect, two worlds</h2>
+    </div>
+    <div class="concl">
+      <div>
+        <div class="prose">
+          <p>The screening supports a single integrated campaign instead of isolated tests: a <strong>north–south Khangai–Gobi Transect along the ~100°E meridian</strong>, linking Khorgo (48.18°N), the top dual Moon/Mars site, with Böön Tsagaan Nuur in the Valley of the Lakes (45.32°N), the top Mars-specific site, about 320&nbsp;km apart in a straight line.</p>
+        </div>
+        <div style="margin-top:18px">
+          <div class="phase"><span class="pn">PHASE 1</span><div><b>Khorgo Volcanic Complex</b><span>Rehearse lava-tube cavern mapping, surface radar backscatter calibration, and cold-region power management.</span></div></div>
+          <div class="phase"><span class="pn">PHASE 2</span><div><b>Valley of the Lakes</b><span>Test autonomous sampling rovers on alkaline lake sediments and analyse carbonate deposits as analogs for Martian paleolakes.</span></div></div>
+          <div class="phase"><span class="pn">PHASE II</span><div><b>Roadmap: validate the scores</b><span>Drone photogrammetry and field sensor networks at each site to ground-truth the orbital data, raise evidence factors, and re-run AFIX.</span></div></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px">Cite this work</h3>
+        <div class="code">
+          <pre id="bib"></pre>
+          <button class="btn sm" id="copyBib">Copy BibTeX</button>
+        </div>
+        <p class="note" id="copyNote" role="status"></p>
+        <div class="dl">
+          <a class="btn solid" href="#paper" data-link="paperUrl">Download full paper (PDF)</a>
+          <a class="btn" href="#paper" data-link="notebookUrl">Python / Earth Engine notebook</a>
+          <a class="btn" href="#paper" data-link="repoUrl">Open-source repository</a>
+        </div>
+        <p class="note" id="linkNote" role="status"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CREW -->
+<section id="crew">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">07 // Mission crew</div>
+      <h2 id="crewTitle">The team</h2>
+    </div>
+    <div class="crew" id="crewGrid"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <b style="color:var(--text);font-family:var(--f-display)">TERRA-TWIN</b> · Built for the NASA International Space Apps Challenge 2026 · Challenge: <em>Identify Earth Locations that Analog the Permanent Moon Base Locations and Mars</em>.<br>
+      NASA does not endorse any non-U.S. Government entity and is not responsible for information contained on non-U.S. Government websites.
+    </div>
+    <div class="mono">Code: MIT · Content: CC BY 4.0</div>
+  </div>
+</footer>
+
+<script>
+/* ============ EDIT THESE BEFORE SUBMITTING ============ */
+const CONFIG = {
+  teamName: "[Insert Team Name]",
+  paperUrl: "",      // link to your PDF
+  notebookUrl: "",   // link to your notebook
+  repoUrl: "",       // link to your GitHub repo
+  crew: [
+    { name: "Team member", role: "Planetary Geologist", github: "", linkedin: "" },
+    { name: "Team member", role: "Remote Sensing & GIS Lead", github: "", linkedin: "" },
+    { name: "Team member", role: "Data Scientist", github: "", linkedin: "" },
+    { name: "Team member", role: "Full-Stack Visualization", github: "", linkedin: "" }
+  ]
+};
+
+/* ============ DATA (from the TERRA-TWIN paper) ============ */
+const SITES = [
+  { id:"khorgo", n:1, name:"Khorgo-Taryatu Volcanic Field", short:"Khorgo-Taryatu", region:"Khangai Mountains, Arkhangai",
+    lat:48.18, lon:99.86, moon:4, mars:8, E:0.85, A:1.00, paper:38, note:"Highest-rated dual Moon/Mars site",
+    role:"Integrated dual Moon/Mars campaign base",
+    targetName:"Lunar mare pits · Tharsis volcanic plains & cave skylights",
+    targets:[ {b:"moon", n:"Marius Hills pit", c:"14.09°N, 303.23°E", s:"ref"}, {b:"mars", n:"Pavonis Mons, Tharsis", c:"1.48°N, 247.04°E", s:"ref"} ],
+    substrate:"Holocene potassic basalt", ti:"Fresh basalt", tmin:"220 K (−53 °C)",
+    evidence:[
+      "Collapse sags and breached cinder cones southwest of Khorgo model lava-tube roof mechanics; the paper's roof-span fracture analysis under lunar gravity indicates stable conditions for underground operations.",
+      "Sentinel-1 C-band and RADARSAT backscatter over blocky Holocene basalt gives roughness profiles that correlate with LRO Mini-RF data from lunar mare-pit rim deposits."
+    ],
+    tests:["Lava-tube LiDAR / GPR cavern mapping","GPS-denied cave navigation","Radar backscatter calibration","Cold-region power management"] },
+  { id:"gobi", n:2, name:"Dundgovi & Gobi Gurvansaikhan", short:"Dundgovi / Gobi", region:"Khongoryn Els & Yolyn Am, South Gobi",
+    lat:43.78, lon:102.30, moon:2, mars:5, E:0.85, A:1.00, paper:21, note:"Martian eolian & dust mobility analog",
+    role:"Eolian dune rover mobility & dust suits",
+    targetName:"Martian eolian dune swaths · cold-trapped canyon ice",
+    targets:[ {b:"mars", n:"Gale Crater dunes (MSL)", c:"5.4°S, 137.8°E", s:"ref"}, {b:"moon", n:"Lunar south-pole cold traps", c:"89.9°S", s:"paper"} ],
+    substrate:"Iron-oxide silt, dunes", ti:"Gravel / silt", tmin:"233 K (−40 °C)",
+    evidence:[
+      "Mohr–Coulomb analysis: cone-penetrometer cohesion and friction angles from the fine silt dunes closely match MSL Curiosity data from the Gale Crater dunes.",
+      "Bekker wheel-sinkage modelling yields slip ratios within a 4.2% margin of MSL rover performance curves.",
+      "Yolyn Am's shaded gorge keeps winter ice into summer: a terrestrial view of topographic cold-trapping."
+    ],
+    tests:["Rover traction & wheel-slip trials","Regolith dust mitigation for suits & seals","Shadowed-ice monitoring"] },
+  { id:"dariganga", n:3, name:"Dariganga Volcanic Field & Taliin Agui Cave", short:"Dariganga / Taliin Agui", region:"Sükhbaatar Province",
+    lat:45.47, lon:114.58, moon:4, mars:4, E:0.70, A:0.70, paper:16, flag:true, note:"Downgraded: limited access, unverified survey data",
+    role:"Subsurface lava-tube structure (requires survey)",
+    targetName:"Lunar mare basalts · subsurface cave ice traps",
+    targets:[ {b:"moon", n:"Mare Tranquillitatis pit", c:"8.34°N, 33.22°E", s:"ref"}, {b:"mars", n:"Basaltic volcanic plains", c:"global", s:"ref"} ],
+    substrate:"Cenozoic alkaline basalt", ti:"Basalt scoria", tmin:"235 K (−38 °C)",
+    evidence:[
+      "Dielectric loss parameters of the Cenozoic basalts align with Apollo mare basalt samples held in the NASA Planetary Data System.",
+      "Taliin Agui, an ice-bearing cave, is a natural testbed for ground-penetrating-radar detection of subsurface cave ice.",
+      "Scores discounted (E 0.70, A 0.70) until a field survey verifies the data; the Moon score is flagged in the paper."
+    ],
+    tests:["GPR survey for cave ice","Cave-ice temperature logging","Lava-tube structural survey"] },
+  { id:"lakes", n:4, name:"Valley of the Lakes · Böön Tsagaan & Orog Nuur", short:"Valley of the Lakes", region:"Bayankhongor / Övörkhangai",
+    lat:45.32, lon:99.97, moon:0, mars:7, E:1.00, A:1.00, paper:39, note:"Top-ranked Mars-specific analog",
+    role:"Jezero carbonate hydrology & drilling",
+    targetName:"Jezero Crater paleolake & carbonate sediments",
+    targets:[ {b:"mars", n:"Jezero Crater", c:"18.38°N, 77.58°E", s:"paper"} ],
+    substrate:"Na-Cl / carbonate sediment", ti:"Carbonate bed", tmin:"—",
+    evidence:[
+      "Alkaline lake waters deposit calcite, monohydrocalcite and smectite clays.",
+      "With gypsum and halite undersaturated, the lakes follow Jezero Crater's hydrologic evolution more closely than Gale Crater's sulfate-dominated deposits."
+    ],
+    tests:["Autonomous rover sampling of lake sediments","Carbonate drilling & biosignature sampling","Field spectroscopy of carbonates & clays"] },
+  { id:"darkhad", n:5, name:"Darkhad Depression", short:"Darkhad Depression", region:"Northern permafrost belt, Khövsgöl",
+    lat:51.30, lon:99.50, moon:0, mars:6, E:1.00, A:0.70, paper:23, note:"Martian subsurface ground-ice analog",
+    role:"Permafrost & subsurface ice prospecting",
+    targetName:"Arcadia & Utopia Planitia mid-latitude ground ice",
+    targets:[ {b:"mars", n:"Arcadia Planitia", c:"47.2°N, 184.3°E", s:"ref"}, {b:"mars", n:"Utopia Planitia", c:"49.7°N, 118.0°E", s:"ref"} ],
+    substrate:"Thick continuous permafrost", ti:"Permafrost silt", tmin:"215 K (−58 °C)",
+    evidence:[
+      "Hosts thick, continuous permafrost.",
+      "The Arsain pingo holds a pure ice core formed by post-lacustrine freeze-back: an analog for Martian ice-cored mounds."
+    ],
+    tests:["Subsurface ice prospecting (GPR)","ISRU ice-drill trials","Pingo ice-core sampling"] },
+  { id:"tsamb", n:6, name:"Tsambagarav Mountain · Mongolian Altai", short:"Tsambagarav Glacier", region:"Mongolian Altai",
+    lat:48.60, lon:90.84, moon:0, mars:6, E:1.00, A:0.70, paper:23, note:"Debris-covered glacier analog",
+    role:"Sub-moraine ice preservation fieldwork",
+    targetName:"Deuteronilus Mensae debris-covered glaciers",
+    targets:[ {b:"mars", n:"Deuteronilus Mensae", c:"43.9°N, 337.4°E", s:"ref"} ],
+    substrate:"Buried glacier ice", ti:"Moraine / ice", tmin:"—",
+    evidence:[
+      "Radiocarbon (¹⁴C) dating shows that glacier ice buried beneath a thin till cover is old.",
+      "Thin debris covers can preserve massive ice through warm, hyper-arid periods, supporting models of debris-protected glacier ice on Mars."
+    ],
+    tests:["Radar sounding through debris cover","Sub-moraine ice coring","Debris-cover thermal monitoring"] },
+  { id:"tabun", n:7, name:"Tabun-Khara-Obo Impact Crater", short:"Tabun-Khara-Obo", region:"SE Gobi, Dornogovi",
+    lat:44.13, lon:109.65, moon:2, mars:4, E:1.00, A:0.70, paper:16, note:"Crater lake & geophysics analog",
+    role:"Impact breccia & buried evaporite geophysics",
+    targetName:"Small degraded Martian impact craters",
+    targets:[ {b:"mars", n:"Small degraded craters", c:"global", s:"ref"}, {b:"moon", n:"Simple bowl craters", c:"global", s:"ref"} ],
+    substrate:"Impact breccia & gypsum", ti:"Impact breccia", tmin:"—",
+    evidence:[
+      "A confirmed simple impact bowl about 1.3 km across, with post-impact lake sediments and gypsum / carbonate deposits above the target breccia.",
+      "Serves as a testbed for subsurface drilling and seismic exploration of buried crater fill."
+    ],
+    tests:["Subsurface drilling testbed","Seismic / gravity survey of crater fill","Evaporite detection with field spectroscopy"] }
+];
+
+const REF = [
+  { col:"Lunar south pole / mare pits", coord:"89.9°S / mare pits", tmin:"25 K (−248 °C)", ti:"Regolith", p:"< 10⁻¹⁰ Pa", geo:"Anorthosite, mare basalt", cls:"moon" },
+  { col:"Mars surface (mid-lat / Jezero)", coord:"18.38°N, 77.58°E", tmin:"140 K (−133 °C)", ti:"Dust / rock", p:"≈ 600 Pa", geo:"Basalt, iron oxides, clays", cls:"mars" }
+];
+
+const DATA = [
+  {g:"Stage 1 · Earth screening"},
+  {n:"ERA5", a:"ECMWF / Copernicus", r:"0.25° (~31 km)", d:"Climate reanalysis: temperature and precipitation for the aridity and cold-extreme criteria.", u:"https://cds.climate.copernicus.eu/"},
+  {n:"CHIRPS", a:"UCSB Climate Hazards Center", r:"0.05° (~5.5 km)", d:"Satellite-gauge precipitation record used to apply the &lt;150 mm/yr aridity threshold.", u:"https://www.chc.ucsb.edu/data/chirps"},
+  {n:"ASTER GED", a:"NASA / METI · LP DAAC", r:"100 m", d:"Global emissivity: thermal-infrared emissivity ε<sub>TIR</sub> to flag mafic (basaltic) surfaces.", u:"https://lpdaac.usgs.gov/products/ag100v003/"},
+  {n:"EMIT", a:"NASA JPL · ISS", r:"~60 m", d:"Imaging spectroscopy of surface mineralogy for the geology axis.", u:"https://earth.jpl.nasa.gov/emit/"},
+  {n:"MODIS LST", a:"NASA Terra / Aqua", r:"1 km", d:"Land-surface temperature: night minimum and diurnal range ΔT.", u:"https://lpdaac.usgs.gov/products/mod11a1v061/"},
+  {n:"ESA Permafrost CCI", a:"ESA Climate Change Initiative", r:"1 km", d:"Permafrost probability feature for ground-ice analogs.", u:"https://climate.esa.int/en/projects/permafrost/"},
+  {g:"Stage 2 · High-resolution Earth"},
+  {n:"Sentinel-1", a:"ESA Copernicus", r:"10 m (C-band SAR)", d:"Backscatter σ⁰ and surface roughness over lava and dunes.", u:"https://dataspace.copernicus.eu/"},
+  {n:"Sentinel-2", a:"ESA Copernicus", r:"10–60 m", d:"Multispectral imagery for vegetation masking and surface mapping.", u:"https://dataspace.copernicus.eu/"},
+  {n:"RADARSAT Constellation", a:"Canadian Space Agency", r:"3–100 m modes", d:"Independent SAR backscatter for roughness cross-checks.", u:"https://www.asc-csa.gc.ca/eng/satellites/radarsat/"},
+  {g:"Off-world target vectors"},
+  {n:"LRO LOLA", a:"NASA LRO · PDS", r:"Down to 5 m polar DEMs", d:"Lunar topography: slope and morphology targets.", u:"https://pds-geosciences.wustl.edu/missions/lro/lola.htm", b:"moon"},
+  {n:"LRO Diviner", a:"NASA LRO · UCLA", r:"Polar gridded products", d:"Lunar surface temperature and polar cold-trap reference conditions.", u:"https://www.diviner.ucla.edu/", b:"moon"},
+  {n:"LRO Mini-RF", a:"NASA LRO · PDS", r:"~30 m", d:"Lunar radar roughness at mare-pit rims, compared with Earth SAR.", u:"https://pds-geosciences.wustl.edu/missions/lro/mrf.htm", b:"moon"},
+  {n:"MRO HiRISE", a:"NASA MRO · Univ. of Arizona", r:"0.25–0.5 m/px", d:"Martian morphology targets: dunes, mounds, craters.", u:"https://www.uahirise.org/", b:"mars"},
+  {n:"Mars SWIM", a:"Subsurface Water Ice Mapping · PSI", r:"Mid-latitude ice maps", d:"Martian ground-ice reference used for the permafrost and glacier sites.", u:"https://swim.psi.edu/", b:"mars"},
+  {g:"Portals"},
+  {n:"NASA Earthdata & Worldview", a:"NASA ESDS", r:"Portal", d:"Search, download and preview of the NASA Earth datasets above.", u:"https://www.earthdata.nasa.gov/", w:true},
+  {n:"NASA Planetary Data System", a:"NASA PDS", r:"Portal", d:"Archive for LRO and MRO products, plus Apollo sample data used in Dariganga's dielectric comparison.", u:"https://pds.nasa.gov/", w:true},
+  {n:"JAXA G-Portal", a:"JAXA", r:"Portal", d:"Partner Earth-observation archive cited by the paper.", u:"https://gportal.jaxa.jp/", w:true},
+  {n:"NASA Moon Trek & Mars Trek", a:"NASA Solar System Treks", r:"Portal", d:"Browser-based exploration of lunar and Martian target sites.", u:"https://trek.nasa.gov/", w:true}
+];
+
+/* ============ HELPERS ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtLat = v => Math.abs(v).toFixed(2) + "°" + (v >= 0 ? "N" : "S");
+const fmtLon = v => Math.abs(v).toFixed(2) + "°" + (v >= 0 ? "E" : "W");
+const isDual = s => s.moon > 0 && s.mars > 0;
+const hasMoon = s => s.moon > 0;
+function afix(s, E, A){
+  const parts = [];
+  if (s.moon > 0) parts.push(s.moon / 9);
+  if (s.mars > 0) parts.push(s.mars / 18);
+  const mean = parts.reduce((a,b)=>a+b,0) / parts.length;
+  return Math.round(100 * mean * (E ?? s.E) * (A ?? s.A));
+}
+const state = { filter:"all", sel:"khorgo", E:null, A:null };
+
+/* ============ MAP ============ */
+const MONGOLIA = [[87.8,49.2],[89.5,49.9],[91.0,50.6],[92.3,50.8],[94.3,50.5],[96.5,50.0],[97.8,49.9],[98.3,50.5],[97.9,51.0],[99.0,51.9],[100.5,51.7],[102.1,51.4],[102.5,50.5],[104.2,50.2],[106.0,50.3],[107.6,50.0],[108.5,49.3],[110.7,49.2],[112.0,49.5],[114.4,50.2],[116.7,49.9],[115.5,48.1],[116.0,47.8],[117.4,47.7],[118.5,47.9],[119.7,47.2],[119.9,46.7],[118.0,46.6],[116.6,46.3],[115.6,45.4],[114.5,45.3],[113.6,44.7],[111.9,45.1],[111.4,44.4],[111.8,43.7],[110.4,42.8],[109.2,42.5],[107.4,42.4],[105.0,41.6],[104.5,41.9],[103.0,42.3],[101.8,42.5],[100.8,42.7],[99.5,42.6],[96.4,42.7],[95.3,44.3],[93.5,45.0],[92.0,45.1],[90.9,45.3],[90.7,46.5],[91.0,47.0],[90.3,47.7],[89.0,48.0],[88.0,48.6]];
+const K = 40, CX = Math.cos(47 * Math.PI / 180);
+const proj = (lon, lat) => [ (lon - 87) * K * CX + 22, (53 - lat) * K + 10 ];
+
+function renderMap(){
+  const svg = $("#mapSvg");
+  let h = `<defs><pattern id="topo" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M0 9 Q4.5 4 9 9 T18 9" fill="none" stroke="rgba(16,185,129,.09)" stroke-width="1"/></pattern></defs>`;
+  for (let lon = 88; lon <= 120; lon += 4){
+    const [x1,y1] = proj(lon, 52.6), [, y2] = proj(lon, 41.2);
+    h += `<line x1="${x1}" y1="${y1}" x2="${x1}" y2="${y2}" stroke="rgba(255,255,255,.06)"/><text x="${x1}" y="${y2+18}" fill="#94A3B8" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">${lon}°E</text>`;
+  }
+  for (let lat = 42; lat <= 52; lat += 2){
+    const [x1,y1] = proj(87.2, lat), [x2] = proj(120.6, lat);
+    h += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y1}" stroke="rgba(255,255,255,.06)"/><text x="${x1-2}" y="${y1-4}" fill="#94A3B8" font-family="JetBrains Mono, monospace" font-size="13">${lat}°N</text>`;
+  }
+  const pts = MONGOLIA.map(p => proj(p[0], p[1]).map(v => v.toFixed(1)).join(",")).join(" ");
+  h += `<polygon points="${pts}" fill="url(#topo)" stroke="rgba(248,250,252,.5)" stroke-width="1.2" stroke-linejoin="round"/>`;
+  h += `<polygon points="${pts}" fill="rgba(14,19,31,.35)" stroke="none"/>`;
+  const a = SITES.find(s => s.id === "khorgo"), b = SITES.find(s => s.id === "lakes");
+  const [ax, ay] = proj(a.lon, a.lat), [bx, by] = proj(b.lon, b.lat);
+  h += `<line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" stroke="#10B981" stroke-width="2" stroke-dasharray="6 5"/>`;
+  h += `<text x="${ax+14}" y="${(ay+by)/2+4}" fill="#10B981" font-family="JetBrains Mono, monospace" font-size="14">Khangai–Gobi Transect · ~320 km</text>`;
+  SITES.forEach(s => {
+    const [x, y] = proj(s.lon, s.lat);
+    const dual = isDual(s);
+    const labelRight = s.lon < 112;
+    h += `<g class="pin" data-id="${s.id}" tabindex="0" role="button" aria-label="${esc(s.name)}">
+      <circle class="halo" cx="${x}" cy="${y}" r="20" fill="${dual ? "#00F0FF" : "#FF4D2A"}" opacity="0"/>
+      <circle cx="${x}" cy="${y}" r="10" fill="#FF4D2A" stroke="${dual ? "#00F0FF" : "#06080D"}" stroke-width="${dual ? 2.5 : 1.5}"/>
+      <text x="${x}" y="${y+4.5}" fill="#06080D" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700" text-anchor="middle">${s.n}</text>
+      <text x="${labelRight ? x+16 : x-16}" y="${y-12}" fill="#F8FAFC" font-family="Space Grotesk, sans-serif" font-size="17" text-anchor="${labelRight ? "start" : "end"}">${esc(s.short)}</text>
+    </g>`;
+  });
+  svg.innerHTML = h;
+  svg.querySelectorAll(".pin").forEach(g => {
+    g.addEventListener("click", () => select(g.dataset.id));
+    g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); select(g.dataset.id); } });
+  });
+}
+
+/* ============ LIST ============ */
+function renderList(){
+  $("#siteList").innerHTML = SITES.map(s => `
+    <button class="scard ${isDual(s) ? "dual" : ""}" data-id="${s.id}" aria-pressed="false">
+      <span class="r"><span class="k">SITE ${String(s.n).padStart(2,"0")}</span><span>${hasMoon(s) ? '<span class="chip moon">Moon</span> ' : ""}<span class="chip mars">Mars</span></span></span>
+      <span class="t">${esc(s.name)}</span>
+      <span class="r"><span class="k">${fmtLat(s.lat)} ${fmtLon(s.lon)}</span><span class="s">AFIX ${s.paper}</span></span>
+    </button>`).join("");
+  document.querySelectorAll(".scard").forEach(b => b.addEventListener("click", () => select(b.dataset.id)));
+}
+
+/* ============ INSPECTOR ============ */
+function bar(label, val, max, color, txt){
+  const pct = Math.max(0, Math.min(100, val / max * 100));
+  return `<div class="bar"><span class="lab">${label}</span><span class="trk"><i style="width:${pct}%;background:${color}"></i></span><span class="v">${txt}</span></div>`;
+}
+function renderInspector(){
+  const s = SITES.find(x => x.id === state.sel);
+  const E = state.E ?? s.E, A = state.A ?? s.A;
+  const val = afix(s, E, A);
+  const tg = s.targets.map(t => `<div class="tgt"><div class="row"><span style="color:${t.b === "moon" ? "var(--moon)" : "var(--mars)"}">${t.b === "moon" ? "Moon" : "Mars"}</span> · ${esc(t.n)}<b>${esc(t.c)}<span class="src">${t.s === "paper" ? "paper" : "ref"}</span></b></div></div>`).join("");
+  $("#inspector").innerHTML = `
+    <div class="ins-head">
+      <span class="num">SITE ${String(s.n).padStart(2,"0")} · ${esc(s.region)}</span>
+      <h3>${esc(s.name)}</h3>
+      <div class="chips">${hasMoon(s) ? '<span class="chip moon"><span class="dot"></span>Moon analog</span>' : ""}<span class="chip mars"><span class="dot"></span>Mars analog</span>${s.flag ? '<span class="chip warn">Needs survey</span>' : ""}</div>
+      <p style="color:var(--muted);font-size:.9rem">${esc(s.note)}. Role: <span style="color:var(--text)">${esc(s.role)}</span>.</p>
+    </div>
+    <div class="twin">
+      <div class="side e"><h4>Earth</h4>
+        <div class="row">Coordinates<b>${fmtLat(s.lat)}, ${fmtLon(s.lon)}</b></div>
+        <div class="row">Substrate<b>${esc(s.substrate)}</b></div>
+        <div class="row">Min surface temp<b>${esc(s.tmin)}</b></div>
+      </div>
+      <div class="arrow" aria-hidden="true">↔</div>
+      <div class="side t"><h4>Twin target</h4>
+        <div class="row" style="color:var(--text);font-size:.82rem">${esc(s.targetName)}</div>${tg}
+      </div>
+    </div>
+    <div class="ins-sec"><h4>Fidelity &amp; operational factors</h4>
+      <div class="bars">
+        ${bar("Moon fidelity", s.moon, 9, "var(--moon)", s.moon + "/9" + (s.flag ? "*" : ""))}
+        ${bar("Mars fidelity", s.mars, 18, "var(--mars)", s.mars + "/18")}
+        ${bar("Evidence E", E, 1, "#cbd5e1", E.toFixed(2))}
+        ${bar("Access A", A, 1, "#cbd5e1", A.toFixed(2))}
+        ${bar("AFIX<sub>adj</sub>", val, 50, "var(--earth)", val)}
+      </div>
+    </div>
+    <div class="ins-sec"><h4>Sensitivity: what if the evidence or access changed?</h4>
+      <div class="sens">
+        <div style="display:grid;gap:10px">
+          <label for="sE">Evidence E <span class="mono" id="vE">${E.toFixed(2)}</span></label>
+          <input type="range" id="sE" min="0.5" max="1" step="0.05" value="${E}">
+          <label for="sA">Access A <span class="mono" id="vA">${A.toFixed(2)}</span></label>
+          <input type="range" id="sA" min="0.5" max="1" step="0.05" value="${A}">
+          <button class="btn sm" id="resetSens" style="justify-self:start">Reset to paper values</button>
+        </div>
+        <div class="big" id="bigVal">${val}<small>AFIX<sub>adj</sub></small></div>
+      </div>
+    </div>
+    <div class="ins-sec"><h4>Evidence</h4><ul class="evi">${s.evidence.map(e => `<li>${esc(e)}</li>`).join("")}</ul></div>
+    <div class="ins-sec"><h4>Recommended field tests</h4><div class="tests">${s.tests.map(t => `<span>${esc(t)}</span>`).join("")}</div></div>`;
+  const upd = id => () => {
+    state.E = parseFloat($("#sE").value); state.A = parseFloat($("#sA").value);
+    renderInspector();
+    const el = document.getElementById(id); if (el) el.focus();
+  };
+  $("#sE").addEventListener("change", upd("sE"));
+  $("#sA").addEventListener("change", upd("sA"));
+  $("#sE").addEventListener("input", () => liveSens(s));
+  $("#sA").addEventListener("input", () => liveSens(s));
+  $("#resetSens").addEventListener("click", () => { state.E = null; state.A = null; renderInspector(); });
+}
+function liveSens(s){
+  const E = parseFloat($("#sE").value), A = parseFloat($("#sA").value);
+  $("#vE").textContent = E.toFixed(2); $("#vA").textContent = A.toFixed(2);
+  $("#bigVal").firstChild.nodeValue = afix(s, E, A);
+}
+
+/* ============ SELECTION & FILTER ============ */
+function visible(s){ return state.filter === "all" || (state.filter === "moon" ? hasMoon(s) : s.mars > 0); }
+function select(id){
+  state.sel = id; state.E = null; state.A = null;
+  document.querySelectorAll(".scard").forEach(b => b.setAttribute("aria-pressed", b.dataset.id === id));
+  document.querySelectorAll(".pin").forEach(g => g.classList.toggle("sel", g.dataset.id === id));
+  renderInspector();
+}
+function applyFilter(){
+  document.querySelectorAll(".fbtn").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === state.filter));
+  SITES.forEach(s => {
+    const v = visible(s);
+    const card = document.querySelector(`.scard[data-id="${s.id}"]`); if (card) card.hidden = !v;
+    const pin = document.querySelector(`.pin[data-id="${s.id}"]`); if (pin) pin.classList.toggle("dim", !v);
+  });
+  const cur = SITES.find(s => s.id === state.sel);
+  if (!visible(cur)){ const first = SITES.find(visible); if (first) select(first.id); }
+}
+
+/* ============ RANKING ============ */
+function renderRanking(){
+  const sorted = [...SITES].sort((a,b) => b.paper - a.paper || b.mars - a.mars);
+  $("#rchart").innerHTML = sorted.map(s => {
+    const bg = isDual(s) ? "linear-gradient(90deg,#00F0FF,#FF4D2A)" : "#FF4D2A";
+    return `<div class="rrow" data-id="${s.id}" role="button" tabindex="0" aria-label="${esc(s.name)}, AFIX adjusted ${s.paper}"><span class="nm">${s.n}. ${esc(s.short)}</span><span class="trk"><i style="width:${s.paper/50*100}%;background:${bg}"></i></span><span class="v">${s.paper}</span></div>`;
+  }).join("");
+  document.querySelectorAll(".rrow").forEach(r => {
+    const go = () => { select(r.dataset.id); document.getElementById("map").scrollIntoView(); };
+    r.addEventListener("click", go);
+    r.addEventListener("keydown", e => { if (e.key === "Enter"){ go(); } });
+  });
+  $("#rtable").innerHTML = sorted.map(s => `<tr><td>${s.n}. ${esc(s.short)}</td><td class="num">${s.moon}${s.flag ? "*" : ""}</td><td class="num">${s.mars}</td><td class="num">${s.E.toFixed(2)}</td><td class="num">${s.A.toFixed(2)}</td><td class="num" style="color:var(--earth)">${s.paper}</td><td>${esc(s.role)}</td></tr>`).join("");
+}
+
+/* ============ ENV MATRIX ============ */
+function renderEnv(){
+  const cols = [...REF.map(r => ({h:r.col, cls:r.cls, coord:r.coord, tmin:r.tmin, ti:r.ti, p:r.p, geo:r.geo})),
+    ...SITES.map(s => ({h:`Site ${s.n}: ${s.short}`, cls:"earth", coord:`${fmtLat(s.lat)}, ${fmtLon(s.lon)}`, tmin:s.tmin, ti:s.ti, p:"≈ 1 atm (terrestrial)", geo:s.substrate}))];
+  const rows = [["Coordinates","coord"],["Min surface temp","tmin"],["Thermal-inertia material","ti"],["Pressure","p"],["Geological substrate","geo"]];
+  const color = c => c === "moon" ? "var(--moon)" : c === "mars" ? "var(--mars)" : "var(--earth)";
+  let h = `<thead><tr><th>Parameter</th>${cols.map(c => `<th style="color:${color(c.cls)}">${esc(c.h)}</th>`).join("")}</tr></thead><tbody>`;
+  rows.forEach(([lab,k]) => { h += `<tr><td style="color:var(--text);white-space:nowrap">${lab}</td>${cols.map(c => `<td class="${k==="coord"||k==="tmin"?"mono":""}" style="font-size:.8rem">${esc(c[k])}</td>`).join("")}</tr>`; });
+  $("#envTable").innerHTML = h + "</tbody>";
+  $("#envTable").style.minWidth = "1400px";
+}
+
+/* ============ BENTO ============ */
+function renderBento(){
+  $("#bento").innerHTML = DATA.map(d => {
+    if (d.g) return `<div class="group-label">${esc(d.g)}</div>`;
+    const chip = d.b === "moon" ? '<span class="chip moon">Moon</span>' : d.b === "mars" ? '<span class="chip mars">Mars</span>' : d.r === "Portal" ? '<span class="chip">Portal</span>' : '<span class="chip earth">Earth</span>';
+    return `<a class="panel dcard ${d.w ? "wide" : ""}" href="${d.u}" target="_blank" rel="noopener">
+      <span class="top"><h3>${esc(d.n)}</h3>${chip}</span>
+      <span class="mono" style="font-size:.72rem;color:var(--muted)">${esc(d.a)}</span>
+      <p>${d.d}</p>
+      <span class="res">${esc(d.r)}</span>
+      <span class="lnk">${esc(d.u.replace(/^https?:\/\//,"").replace(/\/$/,""))} ↗</span>
+    </a>`;
+  }).join("");
+}
+
+/* ============ PAPER, LINKS, CREW ============ */
+function renderPaper(){
+  const key = (CONFIG.teamName.replace(/[^A-Za-z0-9]/g,"") || "team").toLowerCase() + "2026terratwin";
+  const bib = `@misc{${key},
+  title        = {TERRA-TWIN: Comprehensive Terrestrial Analog Evaluation
+                  for Permanent Lunar Bases and Martian Habitats in Mongolia},
+  author       = {${CONFIG.teamName}},
+  year         = {2026},
+  howpublished = {NASA International Space Apps Challenge 2026},
+  note         = {Challenge: Identify Earth Locations that Analog the
+                  Permanent Moon Base Locations and Mars}
+}`;
+  $("#bib").textContent = bib;
+  $("#copyBib").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(bib); $("#copyNote").textContent = "BibTeX copied to clipboard."; }
+    catch(e){
+      const r = document.createRange(); r.selectNodeContents($("#bib"));
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      $("#copyNote").textContent = "Copy was blocked here. The citation is selected: press Ctrl/⌘ + C.";
+    }
+  });
+  document.querySelectorAll("[data-link]").forEach(a => {
+    const url = CONFIG[a.dataset.link];
+    if (url){ a.href = url; a.target = "_blank"; a.rel = "noopener"; }
+    else a.addEventListener("click", () => { $("#linkNote").textContent = "This file will be linked here once it is published."; });
+  });
+  $("#teamNameBrief").textContent = CONFIG.teamName;
+  $("#crewTitle").textContent = CONFIG.teamName.startsWith("[") ? "The team" : CONFIG.teamName;
+  $("#crewGrid").innerHTML = CONFIG.crew.map(m => {
+    const ini = m.name.split(/\s+/).map(w => w[0]).join("").slice(0,2).toUpperCase();
+    const links = [m.github && `<a href="${esc(m.github)}" target="_blank" rel="noopener">GitHub</a>`, m.linkedin && `<a href="${esc(m.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>`].filter(Boolean).join("");
+    return `<div class="panel mem"><div class="av">${esc(ini)}</div><div><b>${esc(m.name)}</b><div class="role">${esc(m.role)}</div></div><div class="links">${links}</div></div>`;
+  }).join("");
+}
+
+/* ============ AUDIO ABSTRACT ============ */
+const ABSTRACT = "TERRA-TWIN. Permanent bases on the Moon and Mars need hardware tested where several planetary extremes meet. Instead of returning to the usual analog sites, we screened all of Mongolia on a one-kilometre grid, comparing temperature, aridity, vegetation, emissivity, permafrost and radar roughness with lunar south-pole and Martian reference conditions. Seven candidate regions survived. We scored each with the Analog Fidelity Index, which keeps thermal, geological, soil-mechanics and morphological fidelity separate, then adjusts for evidence quality and access. The Khorgo-Taryatu volcanic field is the strongest dual Moon and Mars analog, with lava-tube structures and lunar-like radar roughness. The Valley of the Lakes is the strongest Mars analog, with alkaline carbonate lakes that echo Jezero Crater. We recommend a single field campaign, the Khangai–Gobi Transect along the one-hundredth meridian, linking both. Earth cannot reproduce reduced gravity, vacuum or space radiation, so every test pairs field work with chamber work.";
+function setupAudio(){
+  const wave = $("#wave");
+  wave.innerHTML = Array.from({length:40}, (_,i) => `<i style="height:${6 + Math.abs(Math.sin(i*1.7))*18}px;animation-delay:${(i%8)*.08}s"></i>`).join("");
+  const btn = $("#playBtn"), box = $("#audio"), note = $("#audioNote");
+  const playSvg = '<path d="M1 1l10 6-10 6z" fill="currentColor"/>', stopSvg = '<rect x="1" y="1" width="10" height="12" fill="currentColor"/>';
+  const synth = window.speechSynthesis;
+  if (!synth){ note.textContent = "Audio is not supported in this browser. Read the abstract below."; return; }
+  btn.addEventListener("click", () => {
+    try {
+      if (synth.speaking){ synth.cancel(); box.classList.remove("on"); $("#playIcon").innerHTML = playSvg; btn.setAttribute("aria-label","Play 60-second audio abstract"); return; }
+      const u = new SpeechSynthesisUtterance(ABSTRACT); u.rate = 1.02; u.lang = "en-US";
+      u.onend = () => { box.classList.remove("on"); $("#playIcon").innerHTML = playSvg; btn.setAttribute("aria-label","Play 60-second audio abstract"); };
+      synth.speak(u); box.classList.add("on"); $("#playIcon").innerHTML = stopSvg; btn.setAttribute("aria-label","Stop audio abstract");
+    } catch(e){ note.textContent = "Audio playback was blocked here."; }
+  });
+}
+
+/* ============ HERO ORBIT CANVAS ============ */
+function setupOrbit(){
+  const cv = $("#orbit"), ctx = cv.getContext("2d");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W, H, dpr, t0 = performance.now();
+  const stars = Array.from({length:110}, () => [Math.random(), Math.random(), Math.random()*1.2+.2]);
+  function size(){ dpr = Math.min(2, window.devicePixelRatio || 1); const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  function planet(x, y, r, c1, c2){
+    const g = ctx.createRadialGradient(x - r*.35, y - r*.35, r*.1, x, y, r);
+    g.addColorStop(0, c1); g.addColorStop(1, c2);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
+  }
+  function frame(now){
+    const t = (now - t0) / 1000;
+    ctx.clearRect(0,0,W,H);
+    stars.forEach(s => { ctx.fillStyle = `rgba(248,250,252,${.25 + .35*Math.abs(Math.sin(t*.6 + s[0]*20))})`; ctx.fillRect(s[0]*W, s[1]*H, s[2], s[2]); });
+    const ex = W*.34, ey = H*.56, er = Math.min(W,H)*.17;
+    const mx = W*.78, my = H*.22, mr = er*.34;
+    const rx = W*.8, ry = H*.8, rr = er*.5;
+    ctx.strokeStyle = "rgba(255,255,255,.08)"; ctx.lineWidth = 1;
+    [1.6, 2.35].forEach(k => { ctx.beginPath(); ctx.ellipse(ex, ey, er*k*1.25, er*k*.5, -.32, 0, Math.PI*2); ctx.stroke(); });
+    planet(ex, ey, er, "#1c3b52", "#0a1622");
+    ctx.save(); ctx.beginPath(); ctx.arc(ex, ey, er, 0, Math.PI*2); ctx.clip();
+    ctx.strokeStyle = "rgba(16,185,129,.25)";
+    for (let i = -3; i <= 3; i++){ ctx.beginPath(); ctx.ellipse(ex, ey, er, er*Math.abs(i)/3.2 || 1, 0, 0, Math.PI*2); ctx.stroke(); }
+    const rot = (t*.08) % 1;
+    for (let i = 0; i < 6; i++){ const ph = ((i/6 + rot) % 1) * Math.PI; ctx.beginPath(); ctx.ellipse(ex, ey, er*Math.abs(Math.cos(ph)), er, 0, 0, Math.PI*2); ctx.stroke(); }
+    ctx.restore();
+    const sx = ex + er*.32, sy = ey - er*.42;
+    ctx.fillStyle = "#10B981"; ctx.beginPath(); ctx.arc(sx, sy, 3.5, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = "rgba(16,185,129,.6)"; ctx.beginPath(); ctx.arc(sx, sy, 7 + 4*Math.abs(Math.sin(t*2)), 0, Math.PI*2); ctx.stroke();
+    planet(mx, my, mr, "#e6eaf0", "#59606b");
+    planet(rx, ry, rr, "#ff8a5c", "#7a1d0c");
+    const mpx = mx, mpy = my + mr*.92, rpx = rx - rr*.35, rpy = ry - rr*.2;
+    function link(x2, y2, col){
+      ctx.setLineDash([4,5]); ctx.lineDashOffset = -t*18; ctx.strokeStyle = col; ctx.globalAlpha = .7;
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.quadraticCurveTo((sx+x2)/2, Math.min(sy,y2) - 40, x2, y2); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x2, y2, 3, 0, Math.PI*2); ctx.fill();
+    }
+    link(mpx, mpy, "#00F0FF");
+    link(rpx, rpy, "#FF4D2A");
+    ctx.font = "11px JetBrains Mono, monospace"; ctx.fillStyle = "#94A3B8";
+    ctx.fillText("MOON · 89.9°S", mx - mr - 4 - ctx.measureText("MOON · 89.9°S").width, my + 4);
+    ctx.fillText("MARS · JEZERO", rx - rr - 8 - ctx.measureText("MARS · JEZERO").width, ry + 4);
+    ctx.fillStyle = "#10B981"; ctx.fillText("MONGOLIA", sx + 10, sy - 8);
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  size(); window.addEventListener("resize", () => { size(); if (reduce) frame(performance.now()); });
+  requestAnimationFrame(frame);
+}
+
+/* ============ TABS, NAV, REVEAL ============ */
+function setupTabs(){
+  const tabs = [...document.querySelectorAll(".tab")];
+  const activate = tab => {
+    tabs.forEach(t => { const on = t === tab; t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; document.getElementById(t.getAttribute("aria-controls")).hidden = !on; });
+    tab.focus();
+  };
+  tabs.forEach((t,i) => {
+    t.addEventListener("click", () => activate(t));
+    t.addEventListener("keydown", e => {
+      if (e.key === "ArrowRight") activate(tabs[(i+1)%tabs.length]);
+      if (e.key === "ArrowLeft") activate(tabs[(i-1+tabs.length)%tabs.length]);
+    });
+  });
+}
+function setupNav(){
+  const btn = $("#menuBtn"), links = $("#navLinks");
+  btn.addEventListener("click", () => { const o = links.classList.toggle("open"); btn.setAttribute("aria-expanded", o); });
+  links.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { links.classList.remove("open"); btn.setAttribute("aria-expanded", false); }));
+}
+function setupReveal(){
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+  const els = document.querySelectorAll(".sec-head, .panel, .tbl-wrap");
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.remove("pre"); io.unobserve(e.target); } }), {rootMargin:"0px 0px -8% 0px"});
+  els.forEach(el => { const r = el.getBoundingClientRect(); if (r.top > window.innerHeight){ el.classList.add("reveal","pre"); io.observe(el); } });
+}
+
+/* ============ INIT ============ */
+renderMap(); renderList(); renderRanking(); renderEnv(); renderBento(); renderPaper();
+$("#cAll").textContent = SITES.length; $("#cMoon").textContent = SITES.filter(hasMoon).length; $("#cMars").textContent = SITES.filter(s => s.mars > 0).length;
+document.querySelectorAll(".fbtn").forEach(b => b.addEventListener("click", () => { state.filter = b.dataset.f; applyFilter(); }));
+select(state.sel);
+setupAudio(); setupOrbit(); setupTabs(); setupNav(); setupReveal();
+</script>
+</body>
+</html>
