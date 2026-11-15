@@ -864,7 +864,14 @@ section{padding:88px 0;border-top:1px solid var(--line)}
 .live-head h3{display:flex;align-items:center;gap:10px}
 .live-dot{width:8px;height:8px;border-radius:50%;background:var(--earth);box-shadow:0 0 0 0 rgba(16,185,129,.6);animation:pulse 2s infinite}
 @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
-.modes{display:flex;gap:6px;flex-wrap:wrap}
+.modes{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.modes .lbl{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.modes .fbtn{display:inline-flex;align-items:center;gap:7px}
+.modes .fbtn::before{content:"";width:8px;height:8px;border-radius:50%;border:1.5px solid currentColor;box-sizing:border-box}
+.modes .fbtn[aria-pressed="false"]{background:transparent;color:var(--muted);border-color:var(--line-2)}
+.modes .fbtn[aria-pressed="false"]:hover{color:var(--text);border-color:var(--moon)}
+.modes .fbtn[aria-pressed="true"]{background:var(--moon);color:#031417;border-color:var(--moon);font-weight:600;box-shadow:0 0 0 3px rgba(0,240,255,.18)}
+.modes .fbtn[aria-pressed="true"]::before{background:#031417;border-color:#031417}
 #liveMap{height:440px;border-radius:8px;border:1px solid var(--line);background:#0a0f19}
 .leaflet-container{font-family:var(--f-body);background:#0a0f19}
 .leaflet-control-attribution{background:rgba(6,8,13,.75)!important;color:var(--muted)!important;font-size:10px}
@@ -975,7 +982,7 @@ tr:last-child td{border-bottom:0}
 @media (max-width:900px){.concl{grid-template-columns:1fr}}
 
 /* CREW + FOOTER */
-.crew{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.crew{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
 .mem{padding:16px;display:grid;gap:10px}
 .av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-mono);font-weight:600;border:1px solid var(--line-2);background:conic-gradient(from 200deg,rgba(0,240,255,.25),rgba(255,77,42,.25),rgba(16,185,129,.25),rgba(0,240,255,.25))}
 .mem b{font-family:var(--f-display)}
@@ -1141,6 +1148,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
       <div class="live-head">
         <h3><span class="live-dot" aria-hidden="true"></span>Live orbital view · <span id="liveName">Khorgo-Taryatu</span></h3>
         <div class="modes" role="group" aria-label="Map layer">
+          <span class="lbl">Layer</span>
           <button class="fbtn" data-mode="sat" aria-pressed="true">Satellite</button>
           <button class="fbtn" data-mode="elev" aria-pressed="false">Elevation</button>
           <button class="fbtn" data-mode="hill" aria-pressed="false">Shaded relief</button>
@@ -1334,7 +1342,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 <footer>
   <div class="wrap">
     <div>
-      <b style="color:var(--text);font-family:var(--f-display)">TERRA-TWIN</b> · Built for the NASA International Space Apps Challenge 2026 · Challenge: <em>Identify Earth Locations that Analog the Permanent Moon Base Locations and Mars</em>.<br>
+      <b style="color:var(--text);font-family:var(--f-display)">TERRA-TWIN</b> · Team Terrarium, Mongolia · Built for the NASA International Space Apps Challenge 2026 · Challenge: <em>Identify Earth Locations that Analog the Permanent Moon Base Locations and Mars</em>.<br>
       NASA does not endorse any non-U.S. Government entity and is not responsible for information contained on non-U.S. Government websites.
     </div>
     <div class="mono">Code: MIT · Content: CC BY 4.0</div>
@@ -1345,15 +1353,15 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 <script>
 /* ============ EDIT THESE BEFORE SUBMITTING ============ */
 const CONFIG = {
-  teamName: "[Insert Team Name]",
+  teamName: "Terrarium",
   paperUrl: "",      // link to your PDF
   notebookUrl: "",   // link to your notebook
   repoUrl: "https://github.com/lukuni/nasa_space_app",       // link to your GitHub repo
+  // role: change to each person's actual role, e.g. "Remote Sensing & GIS Lead"
   crew: [
-    { name: "Team member", role: "Planetary Geologist", github: "", linkedin: "" },
-    { name: "Team member", role: "Remote Sensing & GIS Lead", github: "", linkedin: "" },
-    { name: "Team member", role: "Data Scientist", github: "", linkedin: "" },
-    { name: "Team member", role: "Full-Stack Visualization", github: "", linkedin: "" }
+    { name: "Oyumaa Chimeddagva", role: "Team Owner", github: "https://github.com/lukuni", linkedin: "" },
+    { name: "Khongorzul Davaajav", role: "Team member", github: "", linkedin: "" },
+    { name: "Anar Munkhtulga", role: "Team member", github: "", linkedin: "" }
   ]
 };
 
@@ -1615,6 +1623,11 @@ const PC = "https://planetarycomputer.microsoft.com";
 const live = { map:null, marker:null, dem:[], mode:"sat", cache:{}, ok:false, site:null };
 function setupLiveMap(){
   const st = $("#liveStatus");
+  document.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => {
+    live.mode = b.dataset.mode;
+    document.querySelectorAll("[data-mode]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    drawDem();
+  }));
   if (!window.L){ st.textContent = "The map library could not load here. Open the public site to explore the live view."; return; }
   live.map = L.map("liveMap", { scrollWheelZoom:false, zoomSnap:0.5, worldCopyJump:true });
   L.tileLayer("https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg", {
@@ -1623,11 +1636,6 @@ function setupLiveMap(){
   }).on("tileload", () => { live.ok = true; }).addTo(live.map);
   live.map.setView([47, 103], 5);
   setTimeout(() => { if (!live.ok) st.textContent = "Live imagery could not load in this viewer. It loads on the public site: lukuni.github.io/nasa_space_app"; }, 8000);
-  document.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => {
-    live.mode = b.dataset.mode;
-    document.querySelectorAll("[data-mode]").forEach(x => x.setAttribute("aria-pressed", x === b));
-    drawDem();
-  }));
 }
 async function demItems(s){
   if (live.cache[s.id]) return live.cache[s.id];
@@ -1727,7 +1735,7 @@ function select(id){
   updateLive(SITES.find(s => s.id === id));
 }
 function applyFilter(){
-  document.querySelectorAll(".fbtn").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === state.filter));
+  document.querySelectorAll(".fbtn[data-f]").forEach(b => b.setAttribute("aria-pressed", b.dataset.f === state.filter));
   SITES.forEach(s => {
     const v = visible(s);
     const card = document.querySelector(`.scard[data-id="${s.id}"]`); if (card) card.hidden = !v;
@@ -1782,14 +1790,17 @@ function renderBento(){
 /* ============ PAPER, LINKS, CREW ============ */
 function renderPaper(){
   const key = (CONFIG.teamName.replace(/[^A-Za-z0-9]/g,"") || "team").toLowerCase() + "2026terratwin";
+  const named = CONFIG.crew.filter(m => m.name && m.name !== "Team member");
+  const authors = named.length ? named.map(m => { const p = m.name.trim().split(/\s+/); return p.length > 1 ? `${p.slice(1).join(" ")}, ${p[0]}` : p[0]; }).join(" and ") : CONFIG.teamName;
   const bib = `@misc{${key},
   title        = {TERRA-TWIN: Comprehensive Terrestrial Analog Evaluation
                   for Permanent Lunar Bases and Martian Habitats in Mongolia},
-  author       = {${CONFIG.teamName}},
+  author       = {${authors}},
   year         = {2026},
   howpublished = {NASA International Space Apps Challenge 2026},
-  note         = {Challenge: Identify Earth Locations that Analog the
-                  Permanent Moon Base Locations and Mars}
+  note         = {Team ${CONFIG.teamName}. Challenge: Identify Earth Locations
+                  that Analog the Permanent Moon Base Locations and Mars},
+  url          = {https://lukuni.github.io/nasa_space_app/}
 }`;
   $("#bib").textContent = bib;
   $("#copyBib").addEventListener("click", async () => {
@@ -1916,7 +1927,7 @@ function setupReveal(){
 renderMap(); renderList(); renderRanking(); renderEnv(); renderBento(); renderPaper(); renderWeather();
 setupLiveMap();
 $("#cAll").textContent = SITES.length; $("#cMoon").textContent = SITES.filter(hasMoon).length; $("#cMars").textContent = SITES.filter(s => s.mars > 0).length;
-document.querySelectorAll(".fbtn").forEach(b => b.addEventListener("click", () => { state.filter = b.dataset.f; applyFilter(); }));
+document.querySelectorAll(".fbtn[data-f]").forEach(b => b.addEventListener("click", () => { state.filter = b.dataset.f; applyFilter(); }));
 select(state.sel);
 setupAudio(); setupOrbit(); setupTabs(); setupNav(); setupReveal();
 loadWeather(); setInterval(loadWeather, 10 * 60 * 1000);
